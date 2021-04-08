@@ -180,17 +180,3 @@ resource "aws_route53_zone" "private" {
     vpc_id = aws_vpc.vpc.id
   }
 }
-
-# ----------------
-# KMS
-# ----------------
-
-resource "aws_kms_alias" "db_enc_key_alias" {
-  name          = "alias/db_enc_key-${var.codename}"
-  target_key_id = aws_kms_key.db_enc_key.id
-}
-
-resource "aws_kms_key" "db_enc_key" {
-  description = "Database encryption key"
-}
-

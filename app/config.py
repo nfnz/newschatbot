@@ -1,5 +1,5 @@
 # FEED
-FEED_URL = 'https://www.feedforall.com/sample.xml'
+FEED_URL = 'https://www.ctidoma.cz/seznam.xml'
 
 # DB
 POSTGRES_HOST = '0.0.0.0'

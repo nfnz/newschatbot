@@ -62,7 +62,7 @@ def get_articles():
         d['title'] = i['title']
         d['image_url'] = i['szn_image']
         # d['subtitle'] = "Size: M"
-        d['buttons'] = [{"type": "web_url", "url": "https://rockets.chatfuel.com/articles/{}/".format(i['id']),
+        d['buttons'] = [{"type": "json_plugin_url", "url": "https://qpvtvquvp1.execute-api.eu-central-1.amazonaws.com/dev/articles/{}/".format(i['id']),
                          "title": "TO MĚ ZAJIMÁ"}]
         l.append(d)
 

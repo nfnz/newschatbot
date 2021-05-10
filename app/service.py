@@ -41,10 +41,10 @@ def get_articles_from_feed():
         d = {}
         d['title'] = i['title']
         d['image_url'] = i['szn_image']
-        d['buttons'] = [{"type": "json_plugin_url",
-                         "url": "https://qpvtvquvp1.execute-api.eu-central-1.amazonaws.com/dev/articles/{}/".format(
-                             i['id']),
-                         "title": "TO MĚ ZAJIMÁ"}]
+        d['buttons'] = [{"type": "show_block",
+                        "title": "TO MĚ ZAJIMÁ",
+                        "block_names": ["Article"],
+                        "set_attributes": {"ArticleID": i['id']}}]
         l.append(d)
     response = jsonify({
         "messages": [

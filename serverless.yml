@@ -1,4 +1,4 @@
-service: feed-parser-backend
+service: newschatbot-backend
 
 plugins:
   - serverless-python-requirements
@@ -13,7 +13,7 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.7
+  runtime: python3.6
   stage: dev
   region: eu-central-1
 

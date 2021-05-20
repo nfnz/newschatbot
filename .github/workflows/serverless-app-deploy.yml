@@ -3,7 +3,7 @@ name: Serverless Application Deployement
 on:
   push:
     branches:
-      - initial-app-structure
+      - develop
 
 
 jobs:

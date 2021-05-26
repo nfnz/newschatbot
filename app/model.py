@@ -90,7 +90,6 @@ class Reading(db.Model):
         self.read = read
         self.score = score
 
-
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
@@ -104,4 +103,28 @@ class Reading(db.Model):
             'refused': self.refused,
             'read': self.read,
             'score': self.score
+        }
+
+
+class Score(db.Model):
+    __tablename__ = 'score'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(Integer, ForeignKey('users.id'))
+    key_word = db.Column(db.String(200))
+    score = db.Column(db.Integer())
+
+    def __init__(self, user_id, key_word, score):
+        self.user_id = user_id
+        self.key_word = key_word
+        self.score = score
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'key_word': self.key_word,
+            'user_id': self.user_id,
+            'score': self.score,
         }

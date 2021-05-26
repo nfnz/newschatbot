@@ -110,7 +110,7 @@ class Score(db.Model):
     __tablename__ = 'score'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(Integer, ForeignKey('users.id'))
-    key_word = db.Column(db.String(200))
+    key_word = db.Column(db.String())
     score = db.Column(db.Integer())
 
     def __init__(self, user_id, key_word, score):
@@ -127,4 +127,53 @@ class Score(db.Model):
             'key_word': self.key_word,
             'user_id': self.user_id,
             'score': self.score,
+        }
+
+
+class Answers(db.Model):
+    __tablename__ = 'answers'
+    id = db.Column(db.Integer, primary_key=True)
+    answer_text = db.Column(db.String())
+    correct_answers = db.Column(db.Boolean, default=False, nullable=False)
+    correct_answer_text = db.Column(db.String, default=True)
+    incorrect_answer_text = db.Column(db.String, default=True)
+
+    def __init__(self, answer_text, correct_answers, correct_answer_text, incorrect_answer_text):
+        self.answer_text = answer_text
+        self.correct_answers = correct_answers
+        self.correct_answer_text = correct_answer_text
+        self.incorrect_answer_text = incorrect_answer_text
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'correct_answer': self.correct_answers,
+            'correct_answer_text': self.correct_answer_text,
+            'incorrect_answer_text': self.incorrect_answer_text,
+        }
+
+
+class Questions(db.Model):
+    __tablename__ = 'questions'
+
+    news_id = db.Column(db.Integer, primary_key=True)
+    question_text = db.Column(db.String())
+    question_type= db.Column(db.Integer())
+
+    def __init__(self, news_id, question_text, question_type):
+        self.news_id = news_id
+        self.question_text = question_text
+        self.question_type = question_type
+
+    def __repr__(self):
+        return '<id {}>'.format(self.news_id)
+
+    def serialize(self):
+        return {
+            'news_id': self.news_id,
+            'question_text': self.question_text,
+            'question_type': self.question_type,
         }

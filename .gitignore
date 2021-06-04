@@ -1,4 +1,7 @@
 /.idea
+/.serverless
+/node_modules
+/venv
 
 # terraform
 .terraform

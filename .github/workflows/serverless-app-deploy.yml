@@ -1,0 +1,44 @@
+name: Serverless Application Deployement
+
+on:
+  push:
+    branches:
+      - develop
+
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    env:
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        SLS_DEBUG: "*"
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker build
+      run: |
+       docker build -t 8a33c1:6ac127ce6f6842e68447466e00cfc8e4 ./dockers/serverless/
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: docker run
+      run: |
+       docker run --name a33c16ac127ce6f6842e68447466e00cfc8e4_68d166 --label 8a33c1 --workdir /github/workspace \
+       --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e SLS_DEBUG -e INPUT_ARGS -e HOME -e GITHUB_JOB \
+       -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_REPOSITORY_OWNER -e GITHUB_RUN_ID -e  GITHUB_RUN_NUMBER \
+       -e GITHUB_RETENTION_DAYS -e GITHUB_ACTOR -e GITHUB_WORKFLOW -e GITHUB_HEAD_REF -e GITHUB_BASE_REF -e GITHUB_EVENT_NAME \
+       -e GITHUB_SERVER_URL -e GITHUB_API_URL -e GITHUB_GRAPHQL_URL -e GITHUB_WORKSPACE -e GITHUB_ACTION -e GITHUB_EVENT_PATH \
+       -e GITHUB_ACTION_REPOSITORY -e GITHUB_ACTION_REF -e GITHUB_PATH -e GITHUB_ENV -e RUNNER_OS -e RUNNER_TOOL_CACHE \
+       -e RUNNER_TEMP -e RUNNER_WORKSPACE -e ACTIONS_RUNTIME_URL -e ACTIONS_RUNTIME_TOKEN -e ACTIONS_CACHE_URL \
+       -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" \
+       -v "/home/runner/work/_temp/_github_home":"/github/home"  \
+       -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" \
+       -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" \
+       -v "/home/runner/work/newschatbot/newschatbot":"/github/workspace" \
+       8a33c1:6ac127ce6f6842e68447466e00cfc8e4 deploy

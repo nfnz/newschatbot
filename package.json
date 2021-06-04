@@ -1,0 +1,24 @@
+{
+  "name": "newschatbot",
+  "version": "1.0.0",
+  "description": "- create env\r - install dependencies: pip install -r requirements.txt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cesko-digital/newschatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cesko-digital/newschatbot/issues"
+  },
+  "homepage": "https://github.com/cesko-digital/newschatbot#readme",
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.1",
+    "serverless-wsgi": "^1.7.6"
+  }
+}

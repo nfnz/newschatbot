@@ -77,8 +77,8 @@ class Reading(db.Model):
     user_id = db.Column(Integer, ForeignKey('users.id'))
     attention = db.Column(db.Integer())
     like = db.Column(db.Integer())
-    refused = db.Column(db.Boolean())
-    read = db.Column(db.Boolean())
+    refused = db.Column(db.Integer())
+    read = db.Column(db.Integer())
     score = db.Column(db.Integer())
 
     def __init__(self, article_id, user_id, attention, like, refused, read, score):

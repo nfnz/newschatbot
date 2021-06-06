@@ -132,7 +132,7 @@ class Score(db.Model):
 class Questions(db.Model):
     __tablename__ = 'questions'
     id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(Integer, ForeignKey('articles.article_id'))
+    news_id = db.Column(Integer, ForeignKey('articles.id'))
     question_text = db.Column(db.String())
     question_type= db.Column(db.Integer())
     order = db.Column(db.Integer())

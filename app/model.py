@@ -77,8 +77,8 @@ class Reading(db.Model):
     user_id = db.Column(Integer, ForeignKey('users.id'))
     attention = db.Column(db.Integer())
     like = db.Column(db.Integer())
-    refused = db.Column(db.Boolean())
-    read = db.Column(db.Boolean())
+    refused = db.Column(db.Integer())
+    read = db.Column(db.Integer())
     score = db.Column(db.Integer())
 
     def __init__(self, article_id, user_id, attention, like, refused, read, score):
@@ -89,7 +89,6 @@ class Reading(db.Model):
         self.refused = refused
         self.read = read
         self.score = score
-
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -105,3 +104,77 @@ class Reading(db.Model):
             'read': self.read,
             'score': self.score
         }
+
+
+class Score(db.Model):
+    __tablename__ = 'score'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(Integer, ForeignKey('users.id'))
+    key_word = db.Column(db.String())
+    score = db.Column(db.Integer())
+
+    def __init__(self, user_id, key_word, score):
+        self.user_id = user_id
+        self.key_word = key_word
+        self.score = score
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'key_word': self.key_word,
+            'user_id': self.user_id,
+            'score': self.score,
+        }
+
+class Questions(db.Model):
+    __tablename__ = 'questions'
+    id = db.Column(db.Integer, primary_key=True)
+    news_id = db.Column(Integer, ForeignKey('articles.id'))
+    question_text = db.Column(db.String())
+    question_type= db.Column(db.Integer())
+    order = db.Column(db.Integer())
+    def __init__(self, news_id, question_text, question_type, order):
+        self.news_id = news_id
+        self.question_text = question_text
+        self.question_type = question_type
+        self.order = order
+    def __repr__(self):
+        return '<id {}>'.format(self.news_id)
+
+    def serialize(self):
+        return {
+            'news_id': self.news_id,
+            'question_text': self.question_text,
+            'question_type': self.question_type,
+        }
+
+class Answers(db.Model):
+    __tablename__ = 'answers'
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(Integer, ForeignKey('questions.id'))
+    answer_text = db.Column(db.String())
+    correct_answers = db.Column(db.Boolean)
+    correct_answer_text = db.Column(db.String)
+    order = db.Column(db.Integer)
+    def __init__(self, question_id, answer_text, correct_answers, correct_answer_text, order):
+        self.question_id = question_id
+        self.answer_text = answer_text
+        self.correct_answers = correct_answers
+        self.correct_answer_text = correct_answer_text
+        self.order = order
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'correct_answer': self.correct_answers,
+            'correct_answer_text': self.correct_answer_text,
+            'incorrect_answer_text': self.incorrect_answer_text,
+        }
+
+

@@ -19,9 +19,9 @@ provider:
   region: eu-west-3
   vpc:
     securityGroupIds:
-      - "sg-0fbabf1fc170b6025"
+      - "sg-0e40d99da53bb424b"
     subnetIds:
-      - "subnet-0bf6b5f75f0c789bf"
+      - "subnet-0a171492d91dc7e3b"
     iamRoleStatements:
       - Effect: "Allow"
         Action:

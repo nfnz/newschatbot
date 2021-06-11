@@ -16,7 +16,7 @@ provider:
   memorySize: 256
   timeout: 600
   stage: dev
-  region: eu-central-1
+  region: eu-west-3
   vpc:
     securityGroupIds:
       - "sg-0fbabf1fc170b6025"

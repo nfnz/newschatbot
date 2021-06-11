@@ -3,7 +3,6 @@ service: newschatbot-backend
 plugins:
   - serverless-python-requirements
   - serverless-wsgi
-
 custom:
   wsgi:
     app: app/main.app
@@ -16,6 +15,21 @@ provider:
   runtime: python3.6
   stage: dev
   region: eu-central-1
+  vpc:
+    securityGroupIds:
+      - "sg-0fbabf1fc170b6025"
+    subnetIds:
+      - "subnet-0bf6b5f75f0c789bf"
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "ec2:CreateNetworkInterface"
+          - "ec2:DescribeNetworkInterfaces"
+          - "ec2:DetachNetworkInterface"
+          - "ec2:DeleteNetworkInterface"
+        Resource: "*"
+    iamManagedPolicies:
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 
 functions:
   app:

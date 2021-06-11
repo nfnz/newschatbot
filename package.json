@@ -19,6 +19,6 @@
   "homepage": "https://github.com/cesko-digital/newschatbot#readme",
   "devDependencies": {
     "serverless-python-requirements": "^5.1.1",
-    "serverless-wsgi": "^1.7.6"
+    "serverless-wsgi": "^1.7.8"
   }
 }

@@ -13,6 +13,8 @@ custom:
 provider:
   name: aws
   runtime: python3.6
+  memorySize: 256
+  timeout: 600
   stage: dev
   region: eu-central-1
   vpc:

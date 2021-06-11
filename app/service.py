@@ -1,10 +1,11 @@
 import feedparser
 from flask import jsonify
 from datetime import datetime
-
-from app.config import FEED_URL
-from app.model import Article, db, Questions, Answers
-
+from sqlalchemy import update
+from newschatbot.app.config import FEED_URL, FEED_FOR_QUESTIONS
+from newschatbot.app.model import Article, db, Questions, Answers
+import requests
+import xmltodict
 
 def get_mock_text():
     return {
@@ -184,3 +185,24 @@ def verify_answer(answerID):
     result = 'spravna' if answer.correct_answers else 'spatna'
 
     return jsonify({"Vysledek": "Vase odpoved byla {}".format(result)})
+
+
+def update_questions():
+    # feed = feedparser.parse(FEED_FOR_QUESTIONS)
+    # print(feed)
+    response = requests.get(FEED_FOR_QUESTIONS)
+    # db_questions = Questions.query.all()
+    # ids = [question.article_id for question in db_questions]
+    # db_articles = Article.query.all()
+    # db_articles_ids = [article.article_id for article in db_articles]
+    # db_articles_primary_key = [article.id for article in db_articles]
+    data = xmltodict.parse(response.content)
+    for key, value in data.items():
+        for i, j in value.items():
+            for q in j:
+                # if int(q['ID']) not in db_articles_ids:
+                print(q['QUIZ'])
+
+
+
+update_questions()

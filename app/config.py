@@ -1,6 +1,6 @@
 # FEED
 FEED_URL = 'https://www.ctidoma.cz/seznam.xml'
-
+FEED_FOR_QUESTIONS = 'https://www.ctidoma.cz/export/cesko-digital'
 # DB
 POSTGRES_HOST = 'localhost'
 POSTGRES_PORT = 5432

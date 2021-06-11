@@ -3,9 +3,19 @@ from flask import jsonify, Blueprint
 
 from app.config import FEED_URL
 from app.service import get_mock_text, get_mock_image, get_article_from_feed, get_articles_from_feed, \
-    update_articles_in_db
+    update_articles_in_db, get_articles_from_db, get_article_from_db, get_question_from_db, verify_answer
 
 api = Blueprint('api', __name__)
+
+
+@api.route('/v1/articles/')
+def get_articles_v1():
+    return get_articles_from_db()
+
+
+@api.route('/v1/articles/<article>/')
+def get_article_v1(article):
+    return get_article_from_db(article)
 
 
 @api.route('/articles/')
@@ -27,8 +37,14 @@ def update_articles():
         return {}
 
 
-# POST /v1/articles/{article_id}/questions/{questionid?} -> question and answers
-# POST /v1/articles/{article_id}/questions/{questionid?} -> question and answers
+@api.route('/articles/<article>/questions/<question>/')
+def get_question(article, question):
+    return get_question_from_db(question)
+
+
+@api.route('/articles/<article>/questions/<questions>/answers/<answer>/')
+def check_answer(article, questions, answer):
+    return verify_answer(answer)
 
 
 @api.route('/mocktext')

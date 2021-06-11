@@ -46,6 +46,54 @@ class Article(db.Model):
 
         }
 
+    def article_article_detail_dto_converter(self) -> list:
+        return [{"text": self.title},
+                {"attachment": {"type": "image", "payload": {'url': self.image_src}}},
+                {"text": self.text},
+                {
+                    "attachment": {
+
+                        "type": "template",
+                        "payload": {
+                            "text": "Možnosti",
+                            "template_type": "button",
+                            "buttons": [
+                                {
+                                    "type": "show_block",
+                                    "block_names": [
+                                        "Articles"
+                                    ],
+                                    "title": "na výběr článku"
+                                },
+                                {
+                                    "type": "show_block",
+                                    "block_names": [
+                                        "Question"
+                                    ],
+                                    "title": "zobrazit otázku"
+                                },
+                                {
+                                    "type": "show_block",
+                                    "block_names": [
+                                        "End"
+                                    ],
+                                    "title": "konec"
+                                }
+                            ]
+                        }
+                    }
+                }
+                ]
+
+    def article_article_dto_converter(self) -> dict:
+        buttons = [{"type": "show_block",
+                    "title": "TO MĚ ZAJIMÁ",
+                    "block_names": ["Article"],
+                    "set_attributes": {"ArticleID": self.id}}]
+
+        return {'title': self.title, 'image_url': self.image_src,
+                'buttons': buttons}
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -173,8 +221,8 @@ class Answers(db.Model):
         return {
             'id': self.id,
             'correct_answer': self.correct_answers,
-            'correct_answer_text': self.correct_answer_text,
-            'incorrect_answer_text': self.incorrect_answer_text,
+            'correct_answer_text': self.answer_text,
+            # 'incorrect_answer_text': self.incorrect_answer_text,
         }
 
 

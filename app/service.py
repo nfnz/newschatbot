@@ -183,4 +183,34 @@ def verify_answer(answerID):
 
     result = 'spravna' if answer.correct_answers else 'spatna'
 
-    return jsonify({"Vysledek": "Vase odpoved byla {}".format(result)})
+    return jsonify({
+        "messages": [
+            {"text":  "Vase odpoved byla {}".format(result)},
+            {
+                    "attachment": {
+
+                        "type": "template",
+                        "payload": {
+                            "text": "Možnosti",
+                            "template_type": "button",
+                            "buttons": [
+                                {
+                                    "type": "show_block",
+                                    "block_names": [
+                                        "Articles"
+                                    ],
+                                    "title": "na výběr článku"
+                                },
+                                {
+                                    "type": "show_block",
+                                    "block_names": [
+                                        "End"
+                                    ],
+                                    "title": "konec"
+                                }
+                            ]
+                        }
+                    }
+                }
+        ]
+        })

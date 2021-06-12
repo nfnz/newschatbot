@@ -47,6 +47,9 @@ class Article(db.Model):
         }
 
     def article_article_detail_dto_converter(self) -> list:
+        # TODO case if article has more than one question
+        question = Questions.query.filter(Questions.news_id == self.id).limit(1).one()
+
         return [{"text": self.title},
                 {"attachment": {"type": "image", "payload": {'url': self.image_src}}},
                 {"text": self.text},
@@ -70,6 +73,8 @@ class Article(db.Model):
                                     "block_names": [
                                         "Question"
                                     ],
+                                    "set_attributes": {"ArticleID": self.id,
+                                                       "QuestionID": question.id},
                                     "title": "zobrazit otázku"
                                 },
                                 {

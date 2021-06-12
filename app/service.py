@@ -188,21 +188,22 @@ def verify_answer(answerID):
 
 
 def update_questions():
-    # feed = feedparser.parse(FEED_FOR_QUESTIONS)
-    # print(feed)
     response = requests.get(FEED_FOR_QUESTIONS)
-    # db_questions = Questions.query.all()
-    # ids = [question.article_id for question in db_questions]
-    # db_articles = Article.query.all()
-    # db_articles_ids = [article.article_id for article in db_articles]
-    # db_articles_primary_key = [article.id for article in db_articles]
+    db_questions = Questions.query.all()
+    articles_id_in_questions = [question.article_id for question in db_questions]
+    db_articles = Article.query.all()
     data = xmltodict.parse(response.content)
     for key, value in data.items():
+        order = 0
         for i, j in value.items():
             for q in j:
-                # if int(q['ID']) not in db_articles_ids:
-                print(q['QUIZ'])
-
+                if int(q['ID']) not in articles_id_in_questions:
+                    id_for_article_id = [article.id if article.article_id == q['ID'] else None for article in db_articles]
+                    order += 1
+                    new_question = Questions(news_id=id_for_article_id[0], question_text=q['QUIZ']['QUIZ_TITLE'],
+                                             question_type='basic', order=order)
+                    db.session.add(new_question)
+    db.session.commit()
 
 
 update_questions()

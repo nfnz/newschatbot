@@ -38,13 +38,11 @@ def get_articles_from_feed():
     feed = feedparser.parse(FEED_URL)
     l = []
     for i in feed['entries']:
-        d = {}
-        d['title'] = i['title']
-        d['image_url'] = i['szn_image']
-        d['buttons'] = [{"type": "show_block",
-                         "title": "TO MĚ ZAJIMÁ",
-                         "block_names": ["Article"],
-                         "set_attributes": {"ArticleID": i['id']}}]
+        d = {'title': i['title'], 'image_url': i['szn_image'],
+             'buttons': [{"type": "show_block",
+                          "title": "TO MĚ ZAJIMÁ",
+                          "block_names": ["Article"],
+                          "set_attributes": {"ArticleID": i['id']}}]}
         l.append(d)
     response = jsonify({
         "messages": [
@@ -159,58 +157,39 @@ def get_question_from_db(questionID):
         }
         buttons.append(d)
 
-    t = {
-        "buttons": buttons,
-        "title": question.question_text
-    }
     return jsonify({
         "messages": [
             {
-                "attachment": {
-                    "payload": {
-                        "elements": [t],
-                        "template_type": "generic"
-                    },
-                    "type": "template"
-                }
+                "quick_replies": buttons,
+                "text": question.question_text
             }
         ]
-        })
+    })
 
 
 def verify_answer(answerID):
     answer = Answers.query.get(answerID)
+    question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
+    article = Article.query.filter(Article.id == question.news_id).limit(1).one()
 
-    result = 'spravna' if answer.correct_answers else 'spatna'
+    result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
+        else 'To se nepovedlo. Koukněte na článek:'
 
     return jsonify({
         "messages": [
-            {"text":  "Vase odpoved byla {}".format(result)},
-            {
-                    "attachment": {
+            {"attachment": {
+                "payload": {
+                    "buttons": [
 
-                        "type": "template",
-                        "payload": {
-                            "text": "Možnosti",
-                            "template_type": "button",
-                            "buttons": [
-                                {
-                                    "type": "show_block",
-                                    "block_names": [
-                                        "Articles"
-                                    ],
-                                    "title": "na výběr článku"
-                                },
-                                {
-                                    "type": "show_block",
-                                    "block_names": [
-                                        "End"
-                                    ],
-                                    "title": "konec"
-                                }
-                            ]
+                        {
+                            "url": article.link_src,
+                            "title": "Chcete vědět víc?",
+                            "type": "web_url"
                         }
-                    }
-                }
-        ]
-        })
+                    ],
+                    "template_type": "button",
+                    "text": result
+                },
+                "type": "template"
+            }}]
+    })

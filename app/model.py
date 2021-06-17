@@ -59,12 +59,12 @@ class Article(db.Model):
 
                             {
                                 "url": self.link_src,
-                                "title": "Chcete vědět víc?",
+                                "title": "přejít na článek",
                                 "type": "web_url"
                             }
                         ],
                         "template_type": "button",
-                        "text": "."
+                        "text": "Chcete vědět víc?"
                     },
                     "type": "template"
                 }},

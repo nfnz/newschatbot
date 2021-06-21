@@ -53,20 +53,33 @@ class Article(db.Model):
         return [{"text": self.title},
                 {"attachment": {"type": "image", "payload": {'url': self.image_src}}},
                 {"text": self.text},
-                {
-                    "attachment": {
+                {"attachment": {
+                    "payload": {
+                        "buttons": [
 
-                        "type": "template",
-                        "payload": {
-                            "text": "Možnosti",
-                            "template_type": "button",
-                            "buttons": [
+                            {
+                                "url": self.link_src,
+                                "title": "přejít na článek",
+                                "type": "web_url"
+                            }
+                        ],
+                        "template_type": "button",
+                        "text": "Chcete vědět víc?"
+                    },
+                    "type": "template"
+                }},
+                {
+
+                            "text": "Článek je",
+                            "quick_replies": [
                                 {
                                     "type": "show_block",
                                     "block_names": [
-                                        "Articles"
+                                        "Question"
                                     ],
-                                    "title": "na výběr článku"
+                                    "set_attributes": {"ArticleID": self.id,
+                                                       "QuestionID": question.id},
+                                    "title": "super"
                                 },
                                 {
                                     "type": "show_block",
@@ -75,18 +88,18 @@ class Article(db.Model):
                                     ],
                                     "set_attributes": {"ArticleID": self.id,
                                                        "QuestionID": question.id},
-                                    "title": "zobrazit otázku"
+                                    "title": "ok"
                                 },
                                 {
                                     "type": "show_block",
                                     "block_names": [
-                                        "End"
+                                        "Articles"
                                     ],
-                                    "title": "konec"
+                                    "title": "nuda"
                                 }
                             ]
-                        }
-                    }
+
+
                 }
                 ]
 

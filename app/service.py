@@ -1,11 +1,10 @@
 import feedparser
 from flask import jsonify
 from datetime import datetime
-from sqlalchemy import update
-from newschatbot.app.config import FEED_URL, FEED_FOR_QUESTIONS
-from newschatbot.app.model import Article, db, Questions, Answers
-import requests
-import xmltodict
+
+from app.config import FEED_URL
+from app.model import Article, db, Questions, Answers
+
 
 def get_mock_text():
     return {
@@ -39,13 +38,11 @@ def get_articles_from_feed():
     feed = feedparser.parse(FEED_URL)
     l = []
     for i in feed['entries']:
-        d = {}
-        d['title'] = i['title']
-        d['image_url'] = i['szn_image']
-        d['buttons'] = [{"type": "show_block",
-                         "title": "TO MĚ ZAJIMÁ",
-                         "block_names": ["Article"],
-                         "set_attributes": {"ArticleID": i['id']}}]
+        d = {'title': i['title'], 'image_url': i['szn_image'],
+             'buttons': [{"type": "show_block",
+                          "title": "TO MĚ ZAJIMÁ",
+                          "block_names": ["Article"],
+                          "set_attributes": {"ArticleID": i['id']}}]}
         l.append(d)
     response = jsonify({
         "messages": [
@@ -160,50 +157,39 @@ def get_question_from_db(questionID):
         }
         buttons.append(d)
 
-    t = {
-        "buttons": buttons,
-        "title": question.question_text
-    }
     return jsonify({
         "messages": [
             {
-                "attachment": {
-                    "payload": {
-                        "elements": [t],
-                        "template_type": "generic"
-                    },
-                    "type": "template"
-                }
+                "quick_replies": buttons,
+                "text": question.question_text
             }
         ]
-        })
+    })
 
 
 def verify_answer(answerID):
     answer = Answers.query.get(answerID)
+    question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
+    article = Article.query.filter(Article.id == question.news_id).limit(1).one()
 
-    result = 'spravna' if answer.correct_answers else 'spatna'
+    result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
+        else 'To se nepovedlo. Koukněte na článek:'
 
-    return jsonify({"Vysledek": "Vase odpoved byla {}".format(result)})
+    return jsonify({
+        "messages": [
+            {"attachment": {
+                "payload": {
+                    "buttons": [
 
-
-def update_questions():
-    response = requests.get(FEED_FOR_QUESTIONS)
-    db_questions = Questions.query.all()
-    articles_id_in_questions = [question.article_id for question in db_questions]
-    db_articles = Article.query.all()
-    data = xmltodict.parse(response.content)
-    for key, value in data.items():
-        order = 0
-        for i, j in value.items():
-            for q in j:
-                if int(q['ID']) not in articles_id_in_questions:
-                    id_for_article_id = [article.id if article.article_id == q['ID'] else None for article in db_articles]
-                    order += 1
-                    new_question = Questions(news_id=id_for_article_id[0], question_text=q['QUIZ']['QUIZ_TITLE'],
-                                             question_type='basic', order=order)
-                    db.session.add(new_question)
-    db.session.commit()
-
-
-update_questions()
+                        {
+                            "url": article.link_src,
+                            "title": "Chcete vědět víc?",
+                            "type": "web_url"
+                        }
+                    ],
+                    "template_type": "button",
+                    "text": result
+                },
+                "type": "template"
+            }}]
+    })

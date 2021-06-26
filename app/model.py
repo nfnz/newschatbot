@@ -46,7 +46,7 @@ class Article(db.Model):
 
         }
 
-    def article_article_detail_dto_converter(self) -> list:
+    def article_article_detail_dto_converter(self, page = 0) -> list:
         # TODO case if article has more than one question
         question = Questions.query.filter(Questions.news_id == self.id).limit(1).one()
 

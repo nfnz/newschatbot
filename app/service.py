@@ -6,6 +6,7 @@ from newschatbot.app.config import FEED_URL, FEED_FOR_QUESTIONS
 from newschatbot.app.model import Article, db, Questions, Answers
 import xmltodict
 
+
 def get_mock_text():
     return {
         "messages": [
@@ -215,11 +216,19 @@ def update_questions():
                                           text=q['PEREX'],
                                           keywords='TODO', media_name='cti-doma')
                     db.session.add(new_article)
-                    order += 1
                     new_question = Questions(news_id=q['ID'], question_text=q['QUIZ']['QUIZ_TITLE'],
-                                             question_type='basic', order=order)
+                                             question_type='basic', order=order + 1)
                     db.session.add(new_question)
-    db.session.commit()
+                    db.session.commit()
+
+                    questions_id = Questions.query.filter_by(news_id=q['ID']).first()
+                    questions_id = questions_id.id
+                    new_answer = Answers(question_id=questions_id,
+                                         answer_text=q['QUIZ']['QUIZ_OPTIONS']['QUIZ_OPTION'][0]['OPTION_LABEL'],
+                                         correct_answers=q['QUIZ']['QUIZ_OPTIONS']['QUIZ_OPTION'][0]['CORRECT'],
+                                         order=order + 1)
+                    db.session.add(new_answer)
+                    db.session.commit()
 
 
 # response = requests.get(FEED_FOR_QUESTIONS)
@@ -227,4 +236,4 @@ def update_questions():
 # for key, value in data.items():
 #     for i, j in value.items():
 #         for q in j:
-#             print(q)
+#             print(q['QUIZ'])

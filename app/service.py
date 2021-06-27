@@ -131,10 +131,9 @@ def get_articles_from_db():
     })
 
 
-def get_article_from_db(pk_id):
+def get_article_from_db(pk_id, page=0):
     article = Article.query.get(pk_id)
-
-    return jsonify({"messages": article.article_article_detail_dto_converter()})
+    return jsonify({"messages": article.article_article_detail_dto_converter(page)})
 
 
 def get_question_from_db(questionID):

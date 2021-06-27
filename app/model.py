@@ -46,13 +46,15 @@ class Article(db.Model):
 
         }
 
-    def article_article_detail_dto_converter(self) -> list:
+    def article_article_detail_dto_converter(self, page = 0) -> list:
         # TODO case if article has more than one question
         question = Questions.query.filter(Questions.news_id == self.id).limit(1).one()
-
-        return [{"text": self.title},
-                {"attachment": {"type": "image", "payload": {'url': self.image_src}}},
-                {"text": self.text},
+        words = self.text.split()
+        words_per_page = 25
+        words_this_page = words[words_per_page * page:(words_per_page * (page + 1))]
+        has_next_page = len(words) > (words_per_page * (page + 1))
+        next_page = (page + 1) if has_next_page else page 
+        data = [{"text": ' '.join(words_this_page)},
                 {"attachment": {
                     "payload": {
                         "buttons": [
@@ -75,19 +77,21 @@ class Article(db.Model):
                                 {
                                     "type": "show_block",
                                     "block_names": [
-                                        "Question"
+                                        "Article" if has_next_page else "Question"
                                     ],
                                     "set_attributes": {"ArticleID": self.id,
-                                                       "QuestionID": question.id},
+                                                       "QuestionID": question.id,
+                                                       "Page": next_page},
                                     "title": "super"
                                 },
                                 {
                                     "type": "show_block",
                                     "block_names": [
-                                        "Question"
+                                        "Article" if has_next_page else "Question"
                                     ],
                                     "set_attributes": {"ArticleID": self.id,
-                                                       "QuestionID": question.id},
+                                                       "QuestionID": question.id,
+                                                       "Page": next_page},
                                     "title": "ok"
                                 },
                                 {
@@ -102,6 +106,11 @@ class Article(db.Model):
 
                 }
                 ]
+        if (page == 0): # prepend title and image for the first page
+            return [{"text": self.title},
+                {"attachment": {"type": "image", "payload": {'url': self.image_src}}}] + data
+        else: # return just the text and quick replies on consecutive pages
+            return data
 
     def article_article_dto_converter(self) -> dict:
         buttons = [{"type": "show_block",

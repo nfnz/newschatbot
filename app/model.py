@@ -217,7 +217,7 @@ class Questions(db.Model):
         self.question_type = question_type
         self.order = order
     def __repr__(self):
-        return '<id {}>'.format(self.news_id)
+        return '<id {}, article id {}>'.format(self.id, self.news_id)
 
     def serialize(self):
         return {

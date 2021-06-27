@@ -1,5 +1,5 @@
 import feedparser
-from flask import jsonify, Blueprint
+from flask import jsonify, Blueprint, request
 
 from app.config import FEED_URL
 from app.service import get_mock_text, get_mock_image, get_article_from_feed, get_articles_from_feed, \
@@ -15,7 +15,8 @@ def get_articles_v1():
 
 @api.route('/v1/articles/<article>/')
 def get_article_v1(article):
-    return get_article_from_db(article)
+    page = int(request.args.get('page') or 0)
+    return get_article_from_db(article, page)
 
 
 @api.route('/articles/')

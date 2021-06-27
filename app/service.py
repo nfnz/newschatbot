@@ -101,9 +101,6 @@ def update_articles_in_db():
                                   creator=i['author'], image_src=i['szn_image'], link_src=i['link'], text=i['summary'],
                                   keywords='TODO', media_name='cti-doma')
 
-            new_question = Questions(news_id=i, question_text=q['QUIZ']['QUIZ_TITLE'],
-                                             question_type='basic', order=order)
-
             db.session.add(new_article)
             counter = counter + 1
     db.session.commit()
@@ -196,22 +193,38 @@ def verify_answer(answerID):
             }}]
     })
 
+
 def update_questions():
-    response = requests.get(FEED_FOR_QUESTIONS)
+    try:
+        response = requests.get(FEED_FOR_QUESTIONS)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        raise SystemExit(err)
     db_questions = Questions.query.all()
-    articles_id_in_questions = [question.article_id for question in db_questions]
-    db_articles = Article.query.all()
+    # articles_id_in_questions = [question.article_id for question in db_questions]
     data = xmltodict.parse(response.content)
+
     for key, value in data.items():
         order = 0
         for i, j in value.items():
             for q in j:
-                if int(q['ID']) not in articles_id_in_questions:
-                    id_for_article_id = [article.id if article.article_id == q['ID'] else None for article in db_articles]
+                exist = Article.query.filter_by(article_id=q['ID'])
+                if not exist:
+                    new_article = Article(article_id=q['ID'], published_date=q['CREATED_DATE'], title=q['TITLE'],
+                                          creator=q['AUTHOR'], image_src=q['IMAGE'], link_src=q['LINK'],
+                                          text=q['PEREX'],
+                                          keywords='TODO', media_name='cti-doma')
+                    db.session.add(new_article)
                     order += 1
-                    new_question = Questions(news_id=id_for_article_id[0], question_text=q['QUIZ']['QUIZ_TITLE'],
+                    new_question = Questions(news_id=q['ID'], question_text=q['QUIZ']['QUIZ_TITLE'],
                                              question_type='basic', order=order)
                     db.session.add(new_question)
     db.session.commit()
 
 
+# response = requests.get(FEED_FOR_QUESTIONS)
+# data = xmltodict.parse(response.content)
+# for key, value in data.items():
+#     for i, j in value.items():
+#         for q in j:
+#             print(q)

@@ -1,10 +1,8 @@
 import feedparser
 from flask import jsonify
 from datetime import datetime
-import requests
 from newschatbot.app.config import FEED_URL
 from newschatbot.app.model import Article, db, Questions, Answers
-import xmltodict
 
 
 def get_mock_text():

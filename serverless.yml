@@ -40,4 +40,3 @@ functions:
       - http: ANY /
       - http: 'ANY {proxy+}'
 
-  cron

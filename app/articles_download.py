@@ -19,7 +19,6 @@ def download_data_from_url():
 def update_articles():
     articles = download_data_from_url()
     for key, value in articles.items():
-        print(value)
         order = 0
         for node, article_data in value.items():
             for q in article_data:

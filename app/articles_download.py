@@ -19,10 +19,11 @@ def download_data_from_url():
 def update_articles():
     articles = download_data_from_url()
     for key, value in articles.items():
+        print(value)
         order = 0
-        for i, j in value.items():
-            for q in j:
-                exist = Article.query.filter_by(article_id=q['ID'])
+        for node, article_data in value.items():
+            for q in article_data:
+                exist = Article.query.filter_by(article_id=q['ID']).first()
                 if not exist:
                     new_article = Article(article_id=q['ID'], published_date=q['CREATED_DATE'], title=q['TITLE'],
                                           creator=q['AUTHOR'], image_src=q['IMAGE'], link_src=q['LINK'],

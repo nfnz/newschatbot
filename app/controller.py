@@ -2,7 +2,7 @@ import feedparser
 from flask import jsonify, Blueprint, request
 
 from app.config import FEED_URL
-from app.service import get_mock_text, get_mock_image, get_article_from_feed, get_articles_from_feed, \
+from app.service import get_mock_text, get_mock_image, get_article_from_feed, get_articles_from_feed, set_article_not_interested, \
     update_articles_in_db, get_articles_from_db, get_article_from_db, get_question_from_db, verify_answer
 
 api = Blueprint('api', __name__)
@@ -27,6 +27,11 @@ def get_articles():
 @api.route('/articles/<article>/')
 def get_article(article):
     return get_article_from_feed(article)
+
+@api.route('/v1/articles/<article>/not-interested', methods=['POST'])
+def article_not_interested(article):
+    set_article_not_interested(request.json, article)
+    return get_articles_from_db()
 
 
 @api.route('/articles/update', methods=['POST'])

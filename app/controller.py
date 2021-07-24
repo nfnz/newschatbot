@@ -13,9 +13,11 @@ def get_articles_v1():
     return get_articles_from_db()
 
 
-@api.route('/v1/articles/<article>/')
+@api.route('/v1/articles/<article>/', methods=['GET', 'POST']) # TODO: remove GET after updating the Chatfuel block
 def get_article_v1(article):
     page = int(request.args.get('page') or 0)
+    if request.method == 'POST':
+        set_article_read(article, request.json)
     return get_article_from_db(article, page)
 
 

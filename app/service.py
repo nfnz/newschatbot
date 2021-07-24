@@ -133,6 +133,7 @@ def get_articles_from_db():
 
 def get_article_from_db(pk_id, page=0):
     article = Article.query.get(pk_id)
+    set_article_read(article.id)
     return jsonify({"messages": article.article_article_detail_dto_converter(page)})
 
 
@@ -230,4 +231,10 @@ def set_article_not_interested(article_id, user_data):
     user = _ensure_user(user_data)
     reading = _ensure_reading(user.id, article_id)
     reading.refused = True
+    db.session.commit()
+
+def set_article_read(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.read = True
     db.session.commit()

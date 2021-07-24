@@ -50,9 +50,9 @@ def get_question(article, question):
     return get_question_from_db(question)
 
 
-@api.route('/articles/<article>/questions/<questions>/answers/<answer>/')
+@api.route('/articles/<article>/questions/<questions>/answers/<answer>/', methods=['GET', 'POST']) # TODO: remove GET after updating the Chatfuel block
 def check_answer(article, questions, answer):
-    return verify_answer(answer)
+    return verify_answer(answer, request.json)
 
 
 @api.route('/mocktext')

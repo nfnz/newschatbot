@@ -167,13 +167,16 @@ def get_question_from_db(questionID):
     })
 
 
-def verify_answer(answerID):
+def verify_answer(answerID, user_data):
     answer = Answers.query.get(answerID)
     question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
     article = Article.query.filter(Article.id == question.news_id).limit(1).one()
     article_questions = Questions.query.filter(Questions.news_id == question.news_id).order_by(Questions.order, Questions.id).all()
     question_index = article_questions.index(question)
     has_more_questions = len(article_questions) > (question_index + 1)
+
+    if answer.correct_answers:
+        increase_score(article.id, user_data)
 
     result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
         else 'To se nepovedlo. Koukněte na článek:'
@@ -237,4 +240,10 @@ def set_article_read(article_id, user_data):
     user = _ensure_user(user_data)
     reading = _ensure_reading(user.id, article_id)
     reading.read = True
+    db.session.commit()
+
+def increase_score(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.score = reading.score + 1
     db.session.commit()

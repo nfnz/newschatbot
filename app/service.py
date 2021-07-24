@@ -247,3 +247,9 @@ def increase_score(article_id, user_data):
     reading = _ensure_reading(user.id, article_id)
     reading.score = reading.score + 1
     db.session.commit()
+
+def set_article_liked(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.like = reading.like + 1
+    db.session.commit()

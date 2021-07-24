@@ -81,7 +81,8 @@ class Article(db.Model):
                                     ],
                                     "set_attributes": {"ArticleID": self.id,
                                                        "QuestionID": question.id,
-                                                       "Page": next_page},
+                                                       "Page": next_page,
+                                                       "Like": 1},
                                     "title": "super"
                                 },
                                 {

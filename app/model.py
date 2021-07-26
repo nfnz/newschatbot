@@ -1,22 +1,23 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, ForeignKey
+from sqlalchemy import MetaData, Column, Integer, String, ForeignKey, DateTime, Boolean
+from sqlalchemy.ext.declarative import declarative_base
 
-db = SQLAlchemy()
+metadata = MetaData()
+Base = declarative_base(metadata=metadata)
 
 
-class Article(db.Model):
+class Article(Base):
     __tablename__ = 'articles'
 
-    id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.Integer())
-    published_date = db.Column(db.DateTime())
-    title = db.Column(db.String())
-    creator = db.Column(db.String())
-    image_src = db.Column(db.String())
-    link_src = db.Column(db.String())
-    text = db.Column(db.String())
-    keywords = db.Column(db.String())  # TODO list
-    media_name = db.Column(db.String())
+    id = Column(Integer, primary_key=True)
+    article_id = Column(Integer())
+    published_date = Column(DateTime())
+    title = Column(String())
+    creator = Column(String())
+    image_src = Column(String())
+    link_src = Column(String())
+    text = Column(String())
+    keywords = Column(String())  # TODO list
+    media_name = Column(String())
 
     def __init__(self, article_id, published_date, title, creator, image_src, link_src, text, keywords, media_name):
         self.article_id = article_id
@@ -46,6 +47,7 @@ class Article(db.Model):
 
         }
 
+    # TODO Move to service
     def article_article_detail_dto_converter(self, page = 0) -> list:
         # TODO case if article has more than one question
         question = Questions.query.filter(Questions.news_id == self.id).limit(1).one()
@@ -53,7 +55,7 @@ class Article(db.Model):
         words_per_page = 25
         words_this_page = words[words_per_page * page:(words_per_page * (page + 1))]
         has_next_page = len(words) > (words_per_page * (page + 1))
-        next_page = (page + 1) if has_next_page else page 
+        next_page = (page + 1) if has_next_page else page
         data = [{"text": ' '.join(words_this_page)},
                 {"attachment": {
                     "payload": {
@@ -112,6 +114,7 @@ class Article(db.Model):
         else: # return just the text and quick replies on consecutive pages
             return data
 
+    # TODO Move to service
     def article_article_dto_converter(self) -> dict:
         buttons = [{"type": "show_block",
                     "title": "TO MĚ ZAJIMÁ",
@@ -122,12 +125,12 @@ class Article(db.Model):
                 'buttons': buttons}
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    messenger_id = db.Column(db.String())
-    keywords = db.Column(db.String())
+    id = Column(Integer, primary_key=True)
+    messenger_id = Column(String())
+    keywords = Column(String())
 
     def __init__(self, messanger_id, keywords):
         self.messenger_id = messanger_id
@@ -144,17 +147,17 @@ class User(db.Model):
         }
 
 
-class Reading(db.Model):
+class Reading(Base):
     __tablename__ = 'reading'
 
-    id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(Integer, ForeignKey('articles.id'))
-    user_id = db.Column(Integer, ForeignKey('users.id'))
-    attention = db.Column(db.Integer())
-    like = db.Column(db.Integer())
-    refused = db.Column(db.Integer())
-    read = db.Column(db.Integer())
-    score = db.Column(db.Integer())
+    id = Column(Integer, primary_key=True)
+    article_id = Column(Integer, ForeignKey('articles.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    attention = Column(Integer())
+    like = Column(Integer())
+    refused = Column(Integer())
+    read = Column(Integer())
+    score = Column(Integer())
 
     def __init__(self, article_id, user_id, attention, like, refused, read, score):
         self.article_id = article_id
@@ -181,12 +184,12 @@ class Reading(db.Model):
         }
 
 
-class Score(db.Model):
+class Score(Base):
     __tablename__ = 'score'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(Integer, ForeignKey('users.id'))
-    key_word = db.Column(db.String())
-    score = db.Column(db.Integer())
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    key_word = Column(String())
+    score = Column(Integer())
 
     def __init__(self, user_id, key_word, score):
         self.user_id = user_id
@@ -204,18 +207,20 @@ class Score(db.Model):
             'score': self.score,
         }
 
-class Questions(db.Model):
+class Questions(Base):
     __tablename__ = 'questions'
-    id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(Integer, ForeignKey('articles.id'))
-    question_text = db.Column(db.String())
-    question_type= db.Column(db.Integer())
-    order = db.Column(db.Integer())
+    id = Column(Integer, primary_key=True)
+    news_id = Column(Integer, ForeignKey('articles.id'))
+    question_text = Column(String())
+    question_type= Column(Integer())
+    order = Column(Integer())
+
     def __init__(self, news_id, question_text, question_type, order):
         self.news_id = news_id
         self.question_text = question_text
         self.question_type = question_type
         self.order = order
+
     def __repr__(self):
         return '<id {}>'.format(self.news_id)
 
@@ -226,14 +231,14 @@ class Questions(db.Model):
             'question_type': self.question_type,
         }
 
-class Answers(db.Model):
+class Answers(Base):
     __tablename__ = 'answers'
-    id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(Integer, ForeignKey('questions.id'))
-    answer_text = db.Column(db.String())
-    correct_answers = db.Column(db.Boolean)
-    correct_answer_text = db.Column(db.String)
-    order = db.Column(db.Integer)
+    id = Column(Integer, primary_key=True)
+    question_id = Column(Integer, ForeignKey('questions.id'))
+    answer_text = Column(String())
+    correct_answers = Column(Boolean)
+    correct_answer_text = Column(String)
+    order = Column(Integer)
     def __init__(self, question_id, answer_text, correct_answers, correct_answer_text, order):
         self.question_id = question_id
         self.answer_text = answer_text

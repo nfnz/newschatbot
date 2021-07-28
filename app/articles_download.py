@@ -53,12 +53,10 @@ def update_articles():
                             new_answer = Answers(question_id=questions_id,
                                                  answer_text=option['OPTION_LABEL'],
                                                  correct_answer_text= list(correct_answer)[0]['OPTION_LABEL'],
-                                                 correct_answers=option['OPTION_LABEL'] if q['CORRECT'] == "1" else None,
+                                                 correct_answers=option['CORRECT'],
                                                  order=order + 1)
                             session.add(new_answer)
                             session.commit()
-
-
 
 
 

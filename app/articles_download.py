@@ -46,22 +46,27 @@ def update_articles():
                     questions_id = questions_id.id
 
                     # TODO more than one answer?
+                    order = 1
+                    for key, answer in q['QUIZ']['QUIZ_OPTIONS'].items():
+                        correct_answer = filter(lambda x: x['CORRECT'] == '1', answer)
+                        for option in answer:
+                            new_answer = Answers(question_id=questions_id,
+                                                 answer_text=option['OPTION_LABEL'],
+                                                 correct_answer_text= list(correct_answer)[0]['OPTION_LABEL'],
+                                                 correct_answers=option['OPTION_LABEL'] if q['CORRECT'] == "1" else None,
+                                                 order=order + 1)
+                            session.add(new_answer)
+                            session.commit()
 
-                    for answer in q['QUIZ']['QUIZ_OPTIONS']['QUIZ_OPTION']:
-                        order = 0
-                        new_answer = Answers(question_id=questions_id,
-                                             answer_text=answer['OPTION_LABEL'],
-                                             correct_answer_text= answer['OPTION_LABEL'] if q['CORRECT'] == "1" else None, # TODO missing
-                                             correct_answers=answer['OPTION_LABEL'] if q['CORRECT'] == "1" else None, # TODO How can I know which id of answers is correct when I dynamically create the answers?
-                                             order=order + 1)
-                        session.add(new_answer)
-                        session.commit()
 
 
-# if __name__ == '__main__':
-#     SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/feed_parser"
-#     engine = create_engine(SQLALCHEMY_DATABASE_URI)
-#     session = Session(engine)
-#     update_articles()
-#
-#     session.close()
+
+
+
+if __name__ == '__main__':
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@localhost:5432/feed_parser"
+    engine = create_engine(SQLALCHEMY_DATABASE_URI)
+    session = Session(engine)
+    update_articles()
+
+    session.close()

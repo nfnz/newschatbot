@@ -169,22 +169,39 @@ def verify_answer(answerID):
     answer = Answers.query.get(answerID)
     question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
     article = Article.query.filter(Article.id == question.news_id).limit(1).one()
+    article_questions = Questions.query.filter(Questions.news_id == question.news_id).order_by(Questions.order, Questions.id).all()
+    question_index = article_questions.index(question)
+    has_more_questions = len(article_questions) > (question_index + 1)
 
     result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
         else 'To se nepovedlo. Koukněte na článek:'
+
+    buttons = [
+        {
+            "url": article.link_src,
+            "title": "Chcete vědět víc?",
+            "type": "web_url"
+        }
+    ]
+    if has_more_questions:
+        next_question = article_questions[question_index + 1] # safe, because has_more_questions checks the list length
+        buttons.append({
+            "type": "show_block",
+            "title": "Další otázka",
+            "block_names": [
+                "Question"
+            ],
+            "set_attributes": {
+                "ArticleID": article.id,
+                "QuestionId": next_question.id
+            },
+        })
 
     return jsonify({
         "messages": [
             {"attachment": {
                 "payload": {
-                    "buttons": [
-
-                        {
-                            "url": article.link_src,
-                            "title": "Chcete vědět víc?",
-                            "type": "web_url"
-                        }
-                    ],
+                    "buttons": buttons,
                     "template_type": "button",
                     "text": result
                 },

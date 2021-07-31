@@ -1,6 +1,6 @@
 import requests
-from newschatbot.app.config import FEED_URL
-from newschatbot.app.model import metadata,  Article, Questions, Answers
+from app.config import FEED_URL
+from app.model import Article, Questions, Answers
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session

@@ -1,7 +1,8 @@
+
 from flask import Flask
 from flask_migrate import Migrate
 
-from app.flaskdb import db
+from app.model import db
 from app.controller import api
 
 app = Flask(__name__)

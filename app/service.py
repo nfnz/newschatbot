@@ -3,7 +3,8 @@ from flask import jsonify
 from datetime import datetime
 
 from app.config import FEED_URL
-from app.model import Article, db, Questions, Answers
+from app.model import Article, Questions, Answers
+from app.flaskdb import db
 
 
 def get_mock_text():
@@ -108,7 +109,7 @@ def update_articles_in_db():
 
 
 def get_articles_from_db():
-    articles = Article.query \
+    articles = db.session.query(Article) \
         .order_by(Article.published_date.desc()) \
         .limit(5) \
         .all()
@@ -131,14 +132,13 @@ def get_articles_from_db():
     })
 
 
-def get_article_from_db(pk_id, page=0):
-    article = Article.query.get(pk_id)
-    return jsonify({"messages": article.article_article_detail_dto_converter(page)})
+def get_article_from_db(pk_id: int, page=0):
+    return jsonify({"messages": _article_article_detail_dto_converter(pk_id, page)})
 
 
 def get_question_from_db(questionID):
-    question = Questions.query.get(questionID)
-    answears = Answers.query.filter(Answers.question_id == question.id).all()
+    question = db.session.query(Questions).get(questionID)
+    answears = db.session.query(Answers).filter(Answers.question_id == question.id).all()
 
     buttons = []
     for i in answears:
@@ -167,10 +167,11 @@ def get_question_from_db(questionID):
 
 
 def verify_answer(answerID):
-    answer = Answers.query.get(answerID)
-    question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
-    article = Article.query.filter(Article.id == question.news_id).limit(1).one()
-    article_questions = Questions.query.filter(Questions.news_id == question.news_id).order_by(Questions.order, Questions.id).all()
+    answer = db.session.query(Answers).get(answerID)
+    question = db.session.query(Questions).filter(Questions.id == answer.question_id).limit(1).one()
+    article = db.session.query(Article).filter(Article.id == question.news_id).limit(1).one()
+
+    article_questions = db.session.query(Questions).filter(Questions.news_id == question.news_id).order_by(Questions.order, Questions.id).all()
     question_index = article_questions.index(question)
     has_more_questions = len(article_questions) > (question_index + 1)
 
@@ -209,3 +210,69 @@ def verify_answer(answerID):
                 "type": "template"
             }}]
     })
+
+
+def _article_article_detail_dto_converter(article_id, page=0) -> list:
+        article = db.session.query(Article).get(article_id)
+        question = db.session.query(Questions).filter(Questions.news_id == article.id).limit(1).one()
+        words = article.text.split()
+        words_per_page = 25
+        words_this_page = words[words_per_page * page:(words_per_page * (page + 1))]
+        has_next_page = len(words) > (words_per_page * (page + 1))
+        next_page = (page + 1) if has_next_page else page
+        data = [{"text": ' '.join(words_this_page)},
+                {"attachment": {
+                    "payload": {
+                        "buttons": [
+
+                            {
+                                "url": article.link_src,
+                                "title": "přejít na článek",
+                                "type": "web_url"
+                            }
+                        ],
+                        "template_type": "button",
+                        "text": "Chcete vědět víc?"
+                    },
+                    "type": "template"
+                }},
+                {
+
+                    "text": "Článek je",
+                    "quick_replies": [
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Article" if has_next_page else "Question"
+                            ],
+                            "set_attributes": {"ArticleID": article.id,
+                                               "QuestionID": question.id,
+                                               "Page": next_page},
+                            "title": "super"
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Article" if has_next_page else "Question"
+                            ],
+                            "set_attributes": {"ArticleID": article.id,
+                                               "QuestionID": question.id,
+                                               "Page": next_page},
+                            "title": "ok"
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Articles"
+                            ],
+                            "title": "nuda"
+                        }
+                    ]
+
+                }
+                ]
+        if (page == 0):  # prepend title and image for the first page
+            return [{"text": article.title},
+                    {"attachment": {"type": "image", "payload": {'url': article.image_src}}}] + data
+        else:  # return just the text and quick replies on consecutive pages
+            return data

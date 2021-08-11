@@ -3,7 +3,7 @@ from flask import jsonify
 from datetime import datetime
 
 from app.config import FEED_URL
-from app.model import Article, db, Questions, Answers
+from app.model import Article, Reading, User, db, Questions, Answers
 
 
 def get_mock_text():
@@ -133,6 +133,7 @@ def get_articles_from_db():
 
 def get_article_from_db(pk_id, page=0):
     article = Article.query.get(pk_id)
+    set_article_read(article.id)
     return jsonify({"messages": article.article_article_detail_dto_converter(page)})
 
 
@@ -166,13 +167,16 @@ def get_question_from_db(questionID):
     })
 
 
-def verify_answer(answerID):
+def verify_answer(answerID, user_data):
     answer = Answers.query.get(answerID)
     question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
     article = Article.query.filter(Article.id == question.news_id).limit(1).one()
     article_questions = Questions.query.filter(Questions.news_id == question.news_id).order_by(Questions.order, Questions.id).all()
     question_index = article_questions.index(question)
     has_more_questions = len(article_questions) > (question_index + 1)
+
+    if answer.correct_answers:
+        increase_score(article.id, user_data)
 
     result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
         else 'To se nepovedlo. Koukněte na článek:'
@@ -209,3 +213,43 @@ def verify_answer(answerID):
                 "type": "template"
             }}]
     })
+
+def _ensure_user(user_data):
+    user = User.query.filter_by(messenger_id=user_data.messenger_user_id).first()
+    if not user:
+        user = User(user_data.messenger_user_id)
+        db.session.add(user)
+        db.session.commit()
+    return user
+
+def _ensure_reading(user_id, article_id):
+    reading = Reading.query.filter_by(user_id=user_id, article_id=article_id)
+    if not reading:
+        reading = Reading(article_id=article_id, user_id=user_id, attention=0, like=0, refused=False, read=False, score=0)
+        db.sesstion.add(reading)
+        db.session.commit()
+    return reading
+
+def set_article_not_interested(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.refused = True
+    db.session.commit()
+
+def set_article_read(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.read = True
+    db.session.commit()
+
+def increase_score(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.score = reading.score + 1
+    db.session.commit()
+
+def set_article_liked(article_id, user_data):
+    user = _ensure_user(user_data)
+    reading = _ensure_reading(user.id, article_id)
+    reading.like = reading.like + 1
+    db.session.commit()

@@ -81,7 +81,8 @@ class Article(db.Model):
                                     ],
                                     "set_attributes": {"ArticleID": self.id,
                                                        "QuestionID": question.id,
-                                                       "Page": next_page},
+                                                       "Page": next_page,
+                                                       "Like": 1},
                                     "title": "super"
                                 },
                                 {
@@ -116,7 +117,13 @@ class Article(db.Model):
         buttons = [{"type": "show_block",
                     "title": "TO MĚ ZAJIMÁ",
                     "block_names": ["Article"],
-                    "set_attributes": {"ArticleID": self.id}}]
+                    "set_attributes": {"ArticleID": self.id}},
+                    {
+                        "type": "show_block",
+                        "title": "To mě nezajímá",
+                        "block_names": ["ArticleNotInterested"],
+                        "set_attributes": {"ArticleId": self.id},
+                    }]
 
         return {'title': self.title, 'image_url': self.image_src,
                 'buttons': buttons}

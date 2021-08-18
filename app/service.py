@@ -216,7 +216,6 @@ def verify_answer(answerID, user_data):
     })
 
 def _ensure_user(user_data):
-    print(user_data['messenger user id'])
     user = User.query.filter_by(messenger_id=user_data['messenger user id']).first()
     if not user:
         user = User(user_data['messenger user id'], 'TODO')

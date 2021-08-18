@@ -215,17 +215,17 @@ def verify_answer(answerID, user_data):
     })
 
 def _ensure_user(user_data):
-    user = User.query.filter_by(messenger_id=user_data.messenger_user_id).first()
+    user = User.query.filter_by(messenger_id=user_data['messenger user id']).first()
     if not user:
-        user = User(user_data.messenger_user_id)
+        user = User(user_data['messenger user id'])
         db.session.add(user)
         db.session.commit()
     return user
 
 def _ensure_reading(user_id, article_id):
-    reading = Reading.query.filter_by(user_id=user_id, article_id=article_id)
+    reading = Reading.query.filter_by(user_id=user_id, article_id=article_id).first()
     if not reading:
-        reading = Reading(article_id=article_id, user_id=user_id, attention=0, like=0, refused=False, read=False, score=0)
+        reading = Reading(article_id=article_id, user_id=user_id, attention=0, like=0, refused=0, read=0, score=0)
         db.sesstion.add(reading)
         db.session.commit()
     return reading
@@ -233,13 +233,13 @@ def _ensure_reading(user_id, article_id):
 def set_article_not_interested(article_id, user_data):
     user = _ensure_user(user_data)
     reading = _ensure_reading(user.id, article_id)
-    reading.refused = True
+    reading.refused = 1
     db.session.commit()
 
 def set_article_read(article_id, user_data):
     user = _ensure_user(user_data)
     reading = _ensure_reading(user.id, article_id)
-    reading.read = True
+    reading.read = 1
     db.session.commit()
 
 def increase_score(article_id, user_data):

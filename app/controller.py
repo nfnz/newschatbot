@@ -33,7 +33,7 @@ def get_article(article):
 
 @api.route('/v1/articles/<article>/not-interested', methods=['POST'])
 def article_not_interested(article):
-    set_article_not_interested(article, request.json)
+    set_article_not_interested(user_data=request.json, article_id=article)
     return get_articles_from_db()
 
 

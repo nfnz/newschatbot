@@ -1,5 +1,6 @@
 import feedparser
 from flask import jsonify
+from sqlalchemy import and_, or_
 from datetime import datetime
 
 from app.config import FEED_URL
@@ -106,13 +107,7 @@ def update_articles_in_db():
     db.session.commit()
     return counter
 
-
-def get_articles_from_db():
-    articles = Article.query \
-        .order_by(Article.published_date.desc()) \
-        .limit(5) \
-        .all()
-
+def articles_to_chatfuel_list(articles):
     results = [article.article_article_dto_converter() for article in articles]
 
     return jsonify({
@@ -129,6 +124,26 @@ def get_articles_from_db():
             }
         ]
     })
+
+def get_articles_from_db():
+    articles = Article.query \
+        .order_by(Article.published_date.desc()) \
+        .limit(5) \
+        .all()
+
+    return articles_to_chatfuel_list(articles)
+
+def get_nonrefused_articles_from_db(user_data):
+    user = User.query.filter_by(messenger_id=user_data['messenger user id']).first()
+    if not user:
+        return get_articles_from_db()
+    articles = Article.query \
+        .outerjoin(Reading, and_(Article.id==Reading.article_id, Reading.user_id==user.id), aliased=True) \
+        .filter(or_(Reading.refused==0, Reading.refused==None)) \
+        .order_by(Article.published_date.desc()) \
+        .limit(5) \
+        .all()
+    return articles_to_chatfuel_list(articles)
 
 
 def get_article_from_db(pk_id, page=0):

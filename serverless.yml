@@ -39,3 +39,7 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+  cronHandler:
+    handler: app/service.test_cron
+    events:
+      - schedule: cron(5,15,25,35,45,55 * * * ? *)

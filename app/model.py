@@ -53,7 +53,7 @@ class Article(db.Model):
         words_per_page = 25
         words_this_page = words[words_per_page * page:(words_per_page * (page + 1))]
         has_next_page = len(words) > (words_per_page * (page + 1))
-        next_page = (page + 1) if has_next_page else page 
+        next_page = (page + 1) if has_next_page else page
         data = [{"text": ' '.join(words_this_page)},
                 {"attachment": {
                     "payload": {
@@ -258,5 +258,3 @@ class Answers(db.Model):
             'correct_answer_text': self.answer_text,
             # 'incorrect_answer_text': self.incorrect_answer_text,
         }
-
-

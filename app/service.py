@@ -231,7 +231,7 @@ def verify_answer(answerID, user_data):
 def _ensure_user(user_data):
     user = User.query.filter_by(messenger_id=str(user_data['messenger user id'])).first()
     if not user:
-        user = User(str(user_data['messenger user id']))
+        user = User(messenger_id=str(user_data['messenger user id']), keywords='')
         db.session.add(user)
         db.session.commit()
     return user

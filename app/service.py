@@ -146,6 +146,20 @@ def get_nonrefused_articles_from_db(user_data):
     return articles_to_chatfuel_list(articles)
 
 
+def get_unread_articles_from_db(user_data):
+    user = User.query.filter_by(messenger_id=user_data['messenger user id']).first()
+    if not user:
+        return get_articles_from_db()
+    articles = Article.query \
+        .outerjoin(Reading, and_(Article.id == Reading.article_id, Reading.user_id == user.id), aliased=True) \
+        .filter(or_(Reading.refused == 0, Reading.refused == None)) \
+        .filter(or_(Reading.read == 0, Reading.read == None)) \
+        .order_by(Article.published_date.desc()) \
+        .limit(5) \
+        .all()
+    return articles_to_chatfuel_list(articles)
+
+
 def get_article_from_db(pk_id, page=0):
     article = Article.query.get(pk_id)
     return jsonify({"messages": article.article_article_detail_dto_converter(page)})
@@ -195,13 +209,20 @@ def verify_answer(answerID, user_data):
     result = "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:" if answer.correct_answers \
         else 'To se nepovedlo. Koukněte na článek:'
 
-    buttons = [
-        {
-            "url": article.link_src,
-            "title": "Chcete vědět víc?",
-            "type": "web_url"
-        }
-    ]
+    buttons = [{
+        "url": article.link_src,
+        "title": "Chcete vědět víc?",
+        "type": "web_url"
+    }, {
+        "type": "show_block",
+        "title": "Další zprávy",
+        "block_names": [
+            "ArticleRead"
+        ],
+        "set_attributes": {
+            "ArticleID": article.id
+        },
+    }]
     if has_more_questions:
         next_question = article_questions[question_index + 1] # safe, because has_more_questions checks the list length
         buttons.append({

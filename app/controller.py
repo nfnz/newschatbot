@@ -65,7 +65,7 @@ def check_answer(article, questions, answer):
 @api.route('/v1/articles/<article>/read', methods=['POST'])
 def article_read(article):
     set_article_read(article_id=article, user_data=request.json)
-    return get_articles_from_db()
+    return get_unread_articles_from_db(request.json)
 
 
 @api.route('/mocktext')

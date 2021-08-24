@@ -136,8 +136,8 @@ class User(db.Model):
     messenger_id = db.Column(db.String())
     keywords = db.Column(db.String())
 
-    def __init__(self, messanger_id, keywords):
-        self.messenger_id = messanger_id
+    def __init__(self, messenger_id, keywords):
+        self.messenger_id = messenger_id
         self.keywords = keywords
 
     def __repr__(self):

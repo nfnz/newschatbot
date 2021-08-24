@@ -134,7 +134,7 @@ def get_articles_from_db():
     return articles_to_chatfuel_list(articles)
 
 def get_nonrefused_articles_from_db(user_data):
-    user = User.query.filter_by(messenger_id=int(user_data['messenger user id'])).first()
+    user = User.query.filter_by(messenger_id=str(user_data['messenger user id'])).first()
     if not user:
         return get_articles_from_db()
     articles = Article.query \
@@ -229,9 +229,9 @@ def verify_answer(answerID, user_data):
     })
 
 def _ensure_user(user_data):
-    user = User.query.filter_by(messenger_id=int(user_data['messenger user id'])).first()
+    user = User.query.filter_by(messenger_id=str(user_data['messenger user id'])).first()
     if not user:
-        user = User(int(user_data['messenger user id']))
+        user = User(str(user_data['messenger user id']))
         db.session.add(user)
         db.session.commit()
     return user

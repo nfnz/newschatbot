@@ -240,7 +240,7 @@ def _ensure_reading(user_id, article_id):
     reading = Reading.query.filter_by(user_id=user_id, article_id=article_id).first()
     if not reading:
         reading = Reading(article_id=article_id, user_id=user_id, attention=0, like=0, refused=0, read=0, score=0)
-        db.sesstion.add(reading)
+        db.session.add(reading)
         db.session.commit()
     return reading
 

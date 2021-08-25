@@ -122,7 +122,7 @@ class Article(db.Model):
                         "type": "show_block",
                         "title": "To mě nezajímá",
                         "block_names": ["ArticleNotInterested"],
-                        "set_attributes": {"ArticleId": self.id},
+                        "set_attributes": {"ArticleID": self.id},
                     }]
 
         return {'title': self.title, 'image_url': self.image_src,

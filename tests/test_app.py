@@ -23,7 +23,7 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
-                                            "set_attributes": {"ArticleId": 1},
+                                            "set_attributes": {"ArticleID": 1},
                                             "title": "To mě nezajímá",
                                             "type": "show_block"
                                         }
@@ -41,7 +41,7 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
-                                            "set_attributes": {"ArticleId": 2},
+                                            "set_attributes": {"ArticleID": 2},
                                             "title": "To mě nezajímá",
                                             "type": "show_block"
                                         }
@@ -155,7 +155,7 @@ def test_article_not_interested(app: Flask) -> None:
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
-                                            "set_attributes": {"ArticleId": 2},
+                                            "set_attributes": {"ArticleID": 2},
                                             "title": "To mě nezajímá",
                                             "type": "show_block"
                                         }

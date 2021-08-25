@@ -74,8 +74,13 @@ def mock_feed():
     return jsonify(title=feed['feed']['title'])
 
 @api.after_request
-def after(response):
+def log_response_info(response):
     print("Log response:")
     print(response.status)
     print(response.get_json())
     return response
+
+@api.before_request
+def log_request_info():
+    print("Log request:")
+    print(request.get_json())

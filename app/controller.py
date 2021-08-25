@@ -72,3 +72,10 @@ def mock_image():
 def mock_feed():
     feed = feedparser.parse(FEED_URL)
     return jsonify(title=feed['feed']['title'])
+
+@api.after_request
+def after(response):
+    print("Log response:")
+    print(response.status)
+    print(response.get_json())
+    return response

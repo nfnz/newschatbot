@@ -43,4 +43,13 @@ Node setup
 npm ci
 ```
 
-TBD
+## Contributing
+### Before pushing changes
+Before you push your changes, run code formatter Black by using the following command:
+```
+black {source_file_or_directory} 
+```
+If the script doesn't work, run Black as package: 
+```
+python3 -m black {source_file_or_directory}
+```

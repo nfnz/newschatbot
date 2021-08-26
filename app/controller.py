@@ -83,4 +83,5 @@ def log_response_info(response):
 @api.before_request
 def log_request_info():
     print("Log request:")
+    print(request.path)
     print(request.get_json())

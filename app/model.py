@@ -117,7 +117,7 @@ class Article(db.Model):
         buttons = [{"type": "show_block",
                     "title": "TO MĚ ZAJIMÁ",
                     "block_names": ["Article"],
-                    "set_attributes": {"ArticleID": self.id}},
+                    "set_attributes": {"ArticleID": self.id, 'Page': 0}},
                     {
                         "type": "show_block",
                         "title": "To mě nezajímá",

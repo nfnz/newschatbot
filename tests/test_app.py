@@ -17,7 +17,7 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 1},
+                                            "set_attributes": {"ArticleID": 1, 'Page': 0},
                                             "title": "TO MĚ ZAJIMÁ",
                                             "type": "show_block"
                                         },
@@ -35,7 +35,7 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 2},
+                                            "set_attributes": {"ArticleID": 2, 'Page': 0},
                                             "title": "TO MĚ ZAJIMÁ",
                                             "type": "show_block"
                                         },
@@ -149,7 +149,7 @@ def test_article_not_interested(app: Flask) -> None:
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 2},
+                                            "set_attributes": {"ArticleID": 2, 'Page': 0},
                                             "title": "TO MĚ ZAJIMÁ",
                                             "type": "show_block"
                                         },

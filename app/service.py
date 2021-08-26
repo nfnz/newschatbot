@@ -43,7 +43,7 @@ def get_articles_from_feed():
              'buttons': [{"type": "show_block",
                           "title": "TO MĚ ZAJIMÁ",
                           "block_names": ["Article"],
-                          "set_attributes": {"ArticleID": i['id']}}]}
+                          "set_attributes": {"ArticleID": i['id'], 'Page': 0}}]}
         l.append(d)
     response = jsonify({
         "messages": [

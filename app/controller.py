@@ -3,9 +3,8 @@ from flask import jsonify, Blueprint, request
 
 from app.config import FEED_URL
 from app.service import get_mock_text, get_mock_image, get_article_from_feed, get_articles_from_feed, \
-    set_article_not_interested, \
-    update_articles_in_db, get_articles_from_db, get_nonrefused_articles_from_db, get_article_from_db, \
-    get_question_from_db, verify_answer, set_article_read, set_article_liked
+    set_article_not_interested, update_articles_in_db, get_articles_from_db, get_nonrefused_articles_from_db, \
+    get_article_from_db, get_question_from_db, verify_answer, set_article_read, set_article_liked
 
 api = Blueprint('api', __name__)
 
@@ -56,8 +55,7 @@ def get_question(article, question):
     return get_question_from_db(question)
 
 
-@api.route('/articles/<article>/questions/<questions>/answers/<answer>/',
-           methods=['GET', 'POST'])  # TODO: remove GET after updating the Chatfuel block
+@api.route('/articles/<article>/questions/<questions>/answers/<answer>/', methods=['GET', 'POST']) # TODO: remove GET after updating the Chatfuel block
 def check_answer(article, questions, answer):
     return verify_answer(answer, request.json)
 

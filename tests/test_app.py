@@ -218,6 +218,12 @@ def test_check_answer(app: Flask) -> None:
                                     'title': 'Chcete vědět víc?',
                                     'type': 'web_url',
                                     'url': 'https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky'
+                                },
+                                {
+                                    'block_names': ['ArticleRead'],
+                                    'set_attributes': {'ArticleID': 1},
+                                    'title': 'Další zprávy',
+                                    'type': 'show_block'
                                 }
                             ],
                             'template_type': 'button',

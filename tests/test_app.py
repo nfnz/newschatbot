@@ -17,42 +17,49 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 1, 'Page': 0},
+                                            "set_attributes": {
+                                                "ArticleID": 1,
+                                                "Page": 0,
+                                            },
                                             "title": "TO MĚ ZAJIMÁ",
-                                            "type": "show_block"
+                                            "type": "show_block",
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
                                             "set_attributes": {"ArticleID": 1},
                                             "title": "To mě nezajímá",
-                                            "type": "show_block"
-                                        }
+                                            "type": "show_block",
+                                        },
                                     ],
                                     "image_url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/02/downuv_syndrom3_0.png",
-                                    "title": "Downův syndrom je nejčastější vrozená vada. Napoví už tvar hlavy, zásadní roli hraje věk matky"
+                                    "title": "Downův syndrom je nejčastější vrozená vada. Napoví už tvar hlavy, zásadní roli hraje věk matky",
                                 },
                                 {
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 2, 'Page': 0},
+                                            "set_attributes": {
+                                                "ArticleID": 2,
+                                                "Page": 0,
+                                            },
                                             "title": "TO MĚ ZAJIMÁ",
-                                            "type": "show_block"
+                                            "type": "show_block",
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
                                             "set_attributes": {"ArticleID": 2},
                                             "title": "To mě nezajímá",
-                                            "type": "show_block"
-                                        }
+                                            "type": "show_block",
+                                        },
                                     ],
                                     "image_url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/03/babis1.jpeg",
-                                    "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)"
-                                }
+                                    "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)",
+                                },
                             ],
                             "image_aspect_ratio": "square",
-                            "template_type": "generic"},
-                            "type": "template"
+                            "template_type": "generic",
+                        },
+                        "type": "template",
                     }
                 }
             ]
@@ -73,7 +80,7 @@ def test_get_article_v1_get(app: Flask) -> None:
                         "payload": {
                             "url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/02/downuv_syndrom3_0.png"
                         },
-                        "type": "image"
+                        "type": "image",
                     }
                 },
                 {
@@ -86,13 +93,13 @@ def test_get_article_v1_get(app: Flask) -> None:
                                 {
                                     "title": "přejít na článek",
                                     "type": "web_url",
-                                    "url": "https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky"
+                                    "url": "https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky",
                                 }
                             ],
                             "template_type": "button",
-                            "text": "Chcete vědět víc?"
+                            "text": "Chcete vědět víc?",
                         },
-                        "type": "template"
+                        "type": "template",
                     }
                 },
                 {
@@ -103,29 +110,29 @@ def test_get_article_v1_get(app: Flask) -> None:
                                 "ArticleID": 1,
                                 "Like": 1,
                                 "Page": 0,
-                                "QuestionID": 1
+                                "QuestionID": 1,
                             },
                             "title": "super",
-                            "type": "show_block"
+                            "type": "show_block",
                         },
                         {
                             "block_names": ["Question"],
                             "set_attributes": {
                                 "ArticleID": 1,
                                 "Page": 0,
-                                "QuestionID": 1
+                                "QuestionID": 1,
                             },
                             "title": "ok",
-                            "type": "show_block"
+                            "type": "show_block",
                         },
                         {
                             "block_names": ["Articles"],
                             "title": "nuda",
-                            "type": "show_block"
-                        }
+                            "type": "show_block",
+                        },
                     ],
-                    "text": "Článek je"
-                }
+                    "text": "Článek je",
+                },
             ]
         }
 
@@ -134,9 +141,7 @@ def test_article_not_interested(app: Flask) -> None:
     with app.test_client() as client:
         response = client.post(
             "/v1/articles/1/not-interested",
-            json={
-                "messenger user id": "some-messenger-id"
-            }
+            json={"messenger user id": "some-messenger-id"},
         )
         assert response.status_code == 200
         assert response.json == {
@@ -149,25 +154,28 @@ def test_article_not_interested(app: Flask) -> None:
                                     "buttons": [
                                         {
                                             "block_names": ["Article"],
-                                            "set_attributes": {"ArticleID": 2, 'Page': 0},
+                                            "set_attributes": {
+                                                "ArticleID": 2,
+                                                "Page": 0,
+                                            },
                                             "title": "TO MĚ ZAJIMÁ",
-                                            "type": "show_block"
+                                            "type": "show_block",
                                         },
                                         {
                                             "block_names": ["ArticleNotInterested"],
                                             "set_attributes": {"ArticleID": 2},
                                             "title": "To mě nezajímá",
-                                            "type": "show_block"
-                                        }
+                                            "type": "show_block",
+                                        },
                                     ],
                                     "image_url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/03/babis1.jpeg",
-                                    "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)"
+                                    "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)",
                                 }
                             ],
                             "image_aspect_ratio": "square",
-                            "template_type": "generic"
+                            "template_type": "generic",
                         },
-                        "type": "template"
+                        "type": "template",
                     }
                 }
             ]
@@ -187,13 +195,13 @@ def test_get_question(app: Flask) -> None:
                             "set_attributes": {
                                 "AnswerID": 1,
                                 "ArticleID": 1,
-                                "QuizID": 1
+                                "QuizID": 1,
                             },
                             "title": "cosi",
-                            "type": "show_block"
+                            "type": "show_block",
                         }
                     ],
-                    "text": "Kdo napsal clanek?"
+                    "text": "Kdo napsal clanek?",
                 }
             ]
         }
@@ -203,33 +211,31 @@ def test_check_answer(app: Flask) -> None:
     with app.test_client() as client:
         response = client.post(
             "/articles/1/questions/1/answers/1/",
-            json={
-                "messenger user id": "some-messanger-id"
-            }
+            json={"messenger user id": "some-messanger-id"},
         )
         assert response.status_code == 200
         assert response.json == {
-            'messages': [
+            "messages": [
                 {
-                    'attachment': {
-                        'payload': {
-                            'buttons': [
+                    "attachment": {
+                        "payload": {
+                            "buttons": [
                                 {
-                                    'title': 'Chcete vědět víc?',
-                                    'type': 'web_url',
-                                    'url': 'https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky'
+                                    "title": "Chcete vědět víc?",
+                                    "type": "web_url",
+                                    "url": "https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky",
                                 },
                                 {
-                                    'block_names': ['ArticleRead'],
-                                    'set_attributes': {'ArticleID': 1},
-                                    'title': 'Další zprávy',
-                                    'type': 'show_block'
-                                }
+                                    "block_names": ["ArticleRead"],
+                                    "set_attributes": {"ArticleID": 1},
+                                    "title": "Další zprávy",
+                                    "type": "show_block",
+                                },
                             ],
-                            'template_type': 'button',
-                            'text': 'Trefa! Pokud se chcete dozvědět víc, koukněte na článek:'
+                            "template_type": "button",
+                            "text": "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:",
                         },
-                        'type': 'template'
+                        "type": "template",
                     }
                 }
             ]
@@ -242,12 +248,8 @@ def test_mocktext(app: Flask) -> None:
         assert response.status_code == 200
         assert response.json == {
             "messages": [
-                {
-                    "text": "Welcome to the Chatfuel Rockets!"
-                },
-                {
-                    "text": "What are you up to?"
-                },
+                {"text": "Welcome to the Chatfuel Rockets!"},
+                {"text": "What are you up to?"},
             ],
         }
 
@@ -263,7 +265,7 @@ def test_mockimage(app: Flask) -> None:
                         "type": "image",
                         "payload": {
                             "url": "https://flask.palletsprojects.com/en/1.1.x/_images/flask-logo.png"
-                        }
+                        },
                     }
                 }
             ]

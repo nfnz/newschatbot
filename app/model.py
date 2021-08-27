@@ -54,8 +54,7 @@ class Article(db.Model):
         words_this_page = words[words_per_page * page:(words_per_page * (page + 1))]
         has_next_page = len(words) > (words_per_page * (page + 1))
         next_page = (page + 1) if has_next_page else page 
-        data = [{"text": ' '.join(words_this_page)},
-                {"attachment": {
+        show_more_block = {"attachment": {
                     "payload": {
                         "buttons": [
 
@@ -69,46 +68,45 @@ class Article(db.Model):
                         "text": "Chcete vědět víc?"
                     },
                     "type": "template"
-                }},
+                }}
+        data = [{"text": ' '.join(words_this_page)},
                 {
-
-                            "text": "Článek je",
-                            "quick_replies": [
-                                {
-                                    "type": "show_block",
-                                    "block_names": [
-                                        "Article" if has_next_page else "Question"
-                                    ],
-                                    "set_attributes": {"ArticleID": self.id,
-                                                       "QuestionID": question.id,
-                                                       "Page": next_page,
-                                                       "Like": 1},
-                                    "title": "super"
-                                },
-                                {
-                                    "type": "show_block",
-                                    "block_names": [
-                                        "Article" if has_next_page else "Question"
-                                    ],
-                                    "set_attributes": {"ArticleID": self.id,
-                                                       "QuestionID": question.id,
-                                                       "Page": next_page},
-                                    "title": "ok"
-                                },
-                                {
-                                    "type": "show_block",
-                                    "block_names": [
-                                        "Articles"
-                                    ],
-                                    "title": "nuda"
-                                }
-                            ]
-
-
+                    "text": "Článek je",
+                    "quick_replies": [
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Article" if has_next_page else "Question"
+                            ],
+                            "set_attributes": {"ArticleID": self.id,
+                                                "QuestionID": question.id,
+                                                "Page": next_page,
+                                                "Like": 1},
+                            "title": "super"
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Article" if has_next_page else "Question"
+                            ],
+                            "set_attributes": {"ArticleID": self.id,
+                                                "QuestionID": question.id,
+                                                "Page": next_page},
+                            "title": "ok"
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": [
+                                "Articles"
+                            ],
+                            "title": "nuda"
+                        }
+                    ]
                 }
                 ]
-        if (page == 0): # prepend title and image for the first page
-            return [{"text": self.title},
+        if (page == 0): 
+            data.insert(1, show_more_block) # add more info if on first page
+            return [{"text": self.title},   # prepend title and image for the first page
                 {"attachment": {"type": "image", "payload": {'url': self.image_src}}}] + data
         else: # return just the text and quick replies on consecutive pages
             return data

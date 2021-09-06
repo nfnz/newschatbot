@@ -192,6 +192,7 @@ def get_article_from_db(pk_id, page=0):
 def get_question_from_db(questionID):
     question = Questions.query.get(questionID)
     answears = Answers.query.filter(Answers.question_id == question.id).all()
+    article: Article = Article.query.filter(Article.id == question.news_id).one()
 
     buttons = []
     for i in answears:
@@ -206,6 +207,24 @@ def get_question_from_db(questionID):
             "type": "show_block",
         }
         buttons.append(d)
+    buttons.append(
+        {
+            "attachment": {
+                "payload": {
+                    "buttons": [
+                        {
+                            "url": article.link_src,
+                            "title": "přejít na článek",
+                            "type": "web_url",
+                        }
+                    ],
+                    "template_type": "button",
+                    "text": "Chcete vědět víc?",
+                },
+                "type": "template",
+            }
+        },
+    )
 
     return jsonify(
         {"messages": [{"quick_replies": buttons, "text": question.question_text}]}

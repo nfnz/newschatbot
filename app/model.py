@@ -67,22 +67,6 @@ class Article(db.Model):
         data = [
             {"text": " ".join(words_this_page)},
             {
-                "attachment": {
-                    "payload": {
-                        "buttons": [
-                            {
-                                "url": self.link_src,
-                                "title": "přejít na článek",
-                                "type": "web_url",
-                            }
-                        ],
-                        "template_type": "button",
-                        "text": "Chcete vědět víc?",
-                    },
-                    "type": "template",
-                }
-            },
-            {
                 "text": "Článek je",
                 "quick_replies": [
                     {

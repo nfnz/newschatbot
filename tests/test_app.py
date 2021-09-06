@@ -87,22 +87,6 @@ def test_get_article_v1_get(app: Flask) -> None:
                     "text": "Downův syndrom patří k nejčastějším vrozeným syndromům dítěte. Jedná se o nejběžnější poruchu chromozomů a bývá také nejvíce rozpoznatelnou příčinou mentální..."
                 },
                 {
-                    "attachment": {
-                        "payload": {
-                            "buttons": [
-                                {
-                                    "title": "přejít na článek",
-                                    "type": "web_url",
-                                    "url": "https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky",
-                                }
-                            ],
-                            "template_type": "button",
-                            "text": "Chcete vědět víc?",
-                        },
-                        "type": "template",
-                    }
-                },
-                {
                     "quick_replies": [
                         {
                             "block_names": ["Question"],
@@ -199,7 +183,23 @@ def test_get_question(app: Flask) -> None:
                             },
                             "title": "cosi",
                             "type": "show_block",
-                        }
+                        },
+                        {
+                            "attachment": {
+                                "payload": {
+                                    "buttons": [
+                                        {
+                                            "title": "přejít " "na " "článek",
+                                            "type": "web_url",
+                                            "url": "https://www.ctidoma.cz/zdravi/downuv-syndrom-je-nejcastejsi-vrozena-vada-napovi-uz-tvar-hlavy-zasadni-roli-hraje-vek-matky",
+                                        }
+                                    ],
+                                    "template_type": "button",
+                                    "text": "Chcete " "vědět " "víc?",
+                                },
+                                "type": "template",
+                            }
+                        },
                     ],
                     "text": "Kdo napsal clanek?",
                 }

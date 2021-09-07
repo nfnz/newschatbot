@@ -166,7 +166,7 @@ def get_nonrefused_articles_from_db(user_data):
 
 
 def get_unread_articles_from_db(user_data):
-    user = User.query.filter_by(messenger_id=user_data["messenger user id"]).first()
+    user = User.query.filter_by(messenger_id=str(user_data["messenger user id"])).first()
     if not user:
         return get_articles_from_db()
     articles = (

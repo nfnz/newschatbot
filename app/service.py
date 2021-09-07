@@ -209,21 +209,10 @@ def get_question_from_db(questionID):
         buttons.append(d)
     buttons.append(
         {
-            "attachment": {
-                "payload": {
-                    "buttons": [
-                        {
-                            "url": article.link_src,
-                            "title": "přejít na článek",
-                            "type": "web_url",
-                        }
-                    ],
-                    "template_type": "button",
-                    "text": "Chcete vědět víc?",
-                },
-                "type": "template",
-            }
-        },
+            "url": article.link_src,
+            "title": "přejít na článek",
+            "type": "web_url",
+        }
     )
 
     return jsonify(

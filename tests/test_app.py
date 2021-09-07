@@ -249,7 +249,9 @@ def test_check_answer_double_score(app: Flask) -> None:
     yesterday = date.today() - timedelta(days=1)
     with psycopg2.connect(dsn=dsn) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("INSERT INTO users(messenger_id) VALUES(1)")
+            cursor.execute(
+                "INSERT INTO users(messenger_id) VALUES('some-messanger-id')"
+            )
             cursor.execute(
                 "INSERT INTO score(user_id, score, date) VALUES(%s, %s, %s)",
                 (1, 5, yesterday.isoformat()),
@@ -261,13 +263,19 @@ def test_check_answer_double_score(app: Flask) -> None:
         )
         assert response.status_code == 200
 
+    with app.test_client() as client:
+        response = client.post(
+            "/articles/1/questions/1/answers/1/",
+            json={"messenger user id": "some-messanger-id"},
+        )
+
     with psycopg2.connect(dsn=dsn) as conn:
         with conn.cursor() as cursor:
             cursor.execute(
                 "SELECT score FROM score WHERE date = %s", (date.today().isoformat(),)
             )
             data = cursor.fetchone()
-            assert data[0] == 2
+            assert data[0] == 4
 
 
 def test_mocktext(app: Flask) -> None:

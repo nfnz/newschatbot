@@ -12,6 +12,7 @@ from app.service import (
     get_articles_from_db,
     get_article_from_db,
     get_question_from_db,
+    get_unread_articles_from_db,
     verify_answer,
     set_article_read,
     set_article_liked,

@@ -257,7 +257,7 @@ def verify_answer(answerID, user_data):
         {
             "type": "show_block",
             "title": "Další zprávy",
-            "block_names": ["ArticleRead"],
+            "block_names": ["Articles"],
             "set_attributes": {"ArticleID": article.id},
         },
     ]

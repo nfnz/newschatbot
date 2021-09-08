@@ -190,11 +190,13 @@ class Score(db.Model):
     user_id = db.Column(Integer, ForeignKey("users.id"))
     key_word = db.Column(db.String())
     score = db.Column(db.Integer())
+    date = db.Column(db.DateTime())
 
-    def __init__(self, user_id, key_word, score):
+    def __init__(self, user_id, key_word, score, date):
         self.user_id = user_id
         self.key_word = key_word
         self.score = score
+        self.date = date
 
     def __repr__(self):
         return "<id {}>".format(self.id)

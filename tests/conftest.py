@@ -67,7 +67,7 @@ def pg_connection(postgres_dsn: str):
     return connection
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def app(pg_connection, postgres_dsn: str) -> Flask:
     app = Flask("app/main")
     app.register_blueprint(api)

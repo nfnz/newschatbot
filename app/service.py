@@ -1,10 +1,10 @@
 import feedparser
 from flask import jsonify
-from sqlalchemy import and_, or_
-from datetime import datetime
+from sqlalchemy import and_, or_, Date, cast
+from datetime import datetime, date, timedelta
 
 from app.config import FEED_URL
-from app.model import Article, Reading, User, db, Questions, Answers
+from app.model import Article, Reading, User, db, Questions, Answers, Score
 
 
 def get_mock_text():
@@ -203,6 +203,9 @@ def get_question_from_db(questionID):
 
 
 def verify_answer(answerID, user_data):
+    user = _ensure_user(user_data)
+    yesterday_score = get_score(user.id, date.today() - timedelta(days=1))
+
     answer = Answers.query.get(answerID)
     question = Questions.query.filter(Questions.id == answer.question_id).limit(1).one()
     article = Article.query.filter(Article.id == question.news_id).limit(1).one()
@@ -215,7 +218,7 @@ def verify_answer(answerID, user_data):
     has_more_questions = len(article_questions) > (question_index + 1)
 
     if answer.correct_answers:
-        increase_score(article.id, user_data)
+        increase_score(article.id, user_data, 1 if yesterday_score.score < 3 else 2)
 
     result = (
         "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:"
@@ -311,10 +314,28 @@ def set_article_read(article_id, user_data):
     db.session.commit()
 
 
-def increase_score(article_id, user_data):
+def get_score(user_id: int, date: date) -> Score:
+    score = Score.query.filter(
+        and_(cast(Score.date, Date) == date, Score.user_id == user_id)
+    ).one_or_none()
+    if score is not None:
+        return score
+
+    return Score(
+        user_id=user_id,
+        key_word="",
+        score=0,
+        date=date,
+    )
+
+
+def increase_score(article_id, user_data, amount: int):
     user = _ensure_user(user_data)
     reading = _ensure_reading(user.id, article_id)
-    reading.score = reading.score + 1
+    reading.score = reading.score + amount
+    score = get_score(user.id, date.today())
+    score.score += amount
+    db.session.add(score)
     db.session.commit()
 
 

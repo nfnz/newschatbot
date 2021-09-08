@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS score(
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     key_word VARCHAR,
-    score INTEGER
+    score INTEGER,
+    date TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS questions(

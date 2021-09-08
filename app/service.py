@@ -145,28 +145,10 @@ def get_articles_from_db():
     return articles_to_chatfuel_list(articles)
 
 
-def get_nonrefused_articles_from_db(user_data):
+def get_unread_articles_from_db(user_data):
     user = User.query.filter_by(
         messenger_id=str(user_data["messenger user id"])
     ).first()
-    if not user:
-        return get_articles_from_db()
-    articles = (
-        Article.query.outerjoin(
-            Reading,
-            and_(Article.id == Reading.article_id, Reading.user_id == user.id),
-            aliased=True,
-        )
-        .filter(or_(Reading.refused == 0, Reading.refused == None))
-        .order_by(Article.published_date.desc())
-        .limit(5)
-        .all()
-    )
-    return articles_to_chatfuel_list(articles)
-
-
-def get_unread_articles_from_db(user_data):
-    user = User.query.filter_by(messenger_id=user_data["messenger user id"]).first()
     if not user:
         return get_articles_from_db()
     articles = (

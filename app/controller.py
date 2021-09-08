@@ -10,9 +10,9 @@ from app.service import (
     set_article_not_interested,
     update_articles_in_db,
     get_articles_from_db,
-    get_nonrefused_articles_from_db,
     get_article_from_db,
     get_question_from_db,
+    get_unread_articles_from_db,
     verify_answer,
     set_article_read,
     set_article_liked,
@@ -26,7 +26,7 @@ api = Blueprint("api", __name__)
 )  # TODO: remove GET after updating the Chatfuel block
 def get_articles_v1():
     if request.method == "POST":
-        return get_nonrefused_articles_from_db(request.json)
+        return get_unread_articles_from_db(request.json)
     return get_articles_from_db()
 
 
@@ -54,7 +54,7 @@ def get_article(article):
 @api.route("/v1/articles/<article>/not-interested", methods=["POST"])
 def article_not_interested(article):
     set_article_not_interested(user_data=request.json, article_id=article)
-    return get_nonrefused_articles_from_db(request.json)
+    return get_unread_articles_from_db(request.json)
 
 
 @api.route("/articles/update", methods=["POST"])

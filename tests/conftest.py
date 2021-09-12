@@ -9,21 +9,21 @@ from app.model import db
 from app.controller import api
 
 
-def ensure_schema(dsn):
+def ensure_schema(dsn: str) -> None:
     with open("tests/data/schema.sql") as f:
         with psycopg2.connect(dsn=dsn) as conn:
             with conn.cursor() as cursor:
                 cursor.execute(f.read())
 
 
-def insert_data(dsn):
+def insert_data(dsn: str) -> None:
     with open("tests/data/db_data.sql") as f:
         with psycopg2.connect(dsn=dsn) as conn:
             with conn.cursor() as cursor:
                 cursor.execute(f.read())
 
 
-def delete_data(dsn):
+def delete_data(dsn: str) -> None:
     with psycopg2.connect(dsn=dsn) as conn:
         with conn.cursor() as cursor:
             cursor.execute(
@@ -39,7 +39,7 @@ def delete_data(dsn):
 
 
 @pytest.fixture(scope="session")
-def postgres_dsn(docker_services):
+def postgres_dsn(docker_services: pytest_docker.plugin.Services) -> str:
     host = "127.0.0.1"
     port = docker_services.port_for("postgres", 5432)
     username = password = "postgres"
@@ -48,7 +48,7 @@ def postgres_dsn(docker_services):
 
 
 @pytest.fixture(scope="session")
-def pg_connection(postgres_dsn):
+def pg_connection(postgres_dsn: str):
     @tenacity.retry(
         stop=tenacity.stop_after_delay(30),
         wait=tenacity.wait_fixed(3),
@@ -68,7 +68,7 @@ def pg_connection(postgres_dsn):
 
 
 @pytest.fixture(scope="function")
-def app(pg_connection, postgres_dsn):
+def app(pg_connection, postgres_dsn: str) -> Flask:
     app = Flask("app/main")
     app.register_blueprint(api)
     app.config["SQLALCHEMY_DATABASE_URI"] = postgres_dsn

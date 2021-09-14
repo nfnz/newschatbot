@@ -1,13 +1,18 @@
 import feedparser
+
 from flask import jsonify, request
 from sqlalchemy import and_, or_, Date, cast
 from datetime import datetime, date, timedelta
 from flask_paginate import Pagination, get_page_args
+from typing import List
 
 from app.config import FEED_URL
 from app.model import Article, Reading, User, db, Questions, Answers, Score
 
 ROWS_PER_PAGE = 5
+
+
+BONUS_START = 3
 
 
 def get_mock_text():
@@ -207,6 +212,40 @@ def get_question_from_db(questionID):
     )
 
 
+def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
+    def get_reminder() -> str:
+        date_today = date.today()
+        today_score: Score = Score.query.filter(
+            and_(cast(Score.date, Date) == date_today, Score.user_id == user_id)
+        ).one_or_none() or Score(user_id=user_id, key_word="", score=0, date=date_today)
+        if today_score.score == 2:
+            return "Ještě jednu otázku a zítra se ti body násobí 2x\n"
+        elif today_score.score < 2:
+            return (
+                f"Dnes jsi správně odpověděl {today_score.score} {'otázek' if today_score == 0 else 'otázku'}, "
+                f"když dáš 3, zítra se ti body násobí 2x"
+            )
+        return ""
+
+    text = ""
+    if correct_answer:
+        text += "Trefa! Jde ti to. 👍\n"
+        user_score: List[Score] = Score.query.filter(Score.user_id == user_id).all()
+        # it would be better to do the sum directly in database,
+        # I just don't know how now
+        total_score = sum(score.score for score in user_score)
+        if yesterday_score >= BONUS_START:
+            text += f"Dám ti 1 bod, celkem máš {total_score} bodů.\n"
+        else:
+            text += f"Dám ti 2 body, celkem máš {total_score} bodů.\n"
+        text += get_reminder()
+        return text
+
+    text += "To se nepovedlo, ale nevadí 👍"
+    text += get_reminder()
+    return text
+
+
 def verify_answer(answerID, user_data):
     user = _ensure_user(user_data)
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1))
@@ -223,12 +262,14 @@ def verify_answer(answerID, user_data):
     has_more_questions = len(article_questions) > (question_index + 1)
 
     if answer.correct_answers:
-        increase_score(article.id, user_data, 1 if yesterday_score.score < 3 else 2)
+        increase_score(
+            article.id, user_data, 1 if yesterday_score.score < BONUS_START else 2
+        )
 
-    result = (
-        "Trefa! Pokud se chcete dozvědět víc, koukněte na článek:"
-        if answer.correct_answers
-        else "To se nepovedlo. Koukněte na článek:"
+    result = get_answer_text(
+        correct_answer=answer.correct_answers,
+        yesterday_score=yesterday_score.score,
+        user_id=user.id,
     )
 
     buttons = [

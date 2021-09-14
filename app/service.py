@@ -208,12 +208,10 @@ def get_question_from_db(questionID):
 
 def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
     def get_reminder() -> str:
-        today_score: Score = (
-            Score.query.filter(
-                and_(cast(Score.date, Date) == date.today(), Score.user_id == user_id)
-            ).one_or_none()
-            or 0
-        )
+        date_today = date.today()
+        today_score: Score = Score.query.filter(
+            and_(cast(Score.date, Date) == date_today, Score.user_id == user_id)
+        ).one_or_none() or Score(user_id=user_id, key_word="", score=0, date=date_today)
         if today_score.score == 2:
             return "Ještě jednu otázku a zítra se ti body násobí 2x\n"
         elif today_score.score < 2:

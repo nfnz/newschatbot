@@ -1,11 +1,15 @@
 import feedparser
-from flask import jsonify
-from sqlalchemy import and_, or_, Date, cast, func
+
+from flask import jsonify, request
+from sqlalchemy import and_, or_, Date, cast
 from datetime import datetime, date, timedelta
+from flask_paginate import Pagination, get_page_args
 from typing import List
 
 from app.config import FEED_URL
 from app.model import Article, Reading, User, db, Questions, Answers, Score
+
+ROWS_PER_PAGE = 5
 
 
 BONUS_START = 3
@@ -123,7 +127,7 @@ def update_articles_in_db():
 
 
 def articles_to_chatfuel_list(articles):
-    results = [article.article_article_dto_converter() for article in articles]
+    results = [article.article_article_dto_converter() for article in articles.items]
 
     return jsonify(
         {
@@ -144,12 +148,15 @@ def articles_to_chatfuel_list(articles):
 
 
 def get_articles_from_db():
-    articles = Article.query.order_by(Article.published_date.desc()).limit(5).all()
-
+    page = request.args.get("page", 1, type=int)
+    articles = Article.query.order_by(Article.published_date.desc()).paginate(
+        page=page, per_page=ROWS_PER_PAGE
+    )
     return articles_to_chatfuel_list(articles)
 
 
 def get_unread_articles_from_db(user_data):
+    page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(
         messenger_id=str(user_data["messenger user id"])
     ).first()
@@ -164,8 +171,7 @@ def get_unread_articles_from_db(user_data):
         .filter(or_(Reading.refused == 0, Reading.refused == None))
         .filter(or_(Reading.read == 0, Reading.read == None))
         .order_by(Article.published_date.desc())
-        .limit(5)
-        .all()
+        .paginate(page=page, per_page=ROWS_PER_PAGE)
     )
     return articles_to_chatfuel_list(articles)
 

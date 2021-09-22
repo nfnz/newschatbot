@@ -117,7 +117,6 @@ def test_get_article_v1_get(app: Flask) -> None:
                             "type": "show_block",
                         },
                     ],
-                    "text": "Článek je",
                 },
             ]
         }

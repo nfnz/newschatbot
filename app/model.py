@@ -67,7 +67,6 @@ class Article(db.Model):
         data = [
             {"text": " ".join(words_this_page)},
             {
-                "text": "Článek je",
                 "quick_replies": [
                     {
                         "type": "show_block",

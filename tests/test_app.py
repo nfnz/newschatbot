@@ -86,9 +86,6 @@ def test_get_article_v1_get(app: Flask) -> None:
                     }
                 },
                 {
-                    "text": "Downův syndrom patří k nejčastějším vrozeným syndromům dítěte. Jedná se o nejběžnější poruchu chromozomů a bývá také nejvíce rozpoznatelnou příčinou mentální..."
-                },
-                {
                     "quick_replies": [
                         {
                             "block_names": ["Question"],
@@ -117,6 +114,7 @@ def test_get_article_v1_get(app: Flask) -> None:
                             "type": "show_block",
                         },
                     ],
+                    "text": "Downův syndrom patří k nejčastějším vrozeným syndromům dítěte. Jedná se o nejběžnější poruchu chromozomů a bývá také nejvíce rozpoznatelnou příčinou mentální..."
                 },
             ]
         }

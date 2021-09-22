@@ -65,8 +65,8 @@ class Article(db.Model):
         has_next_page = len(words) > (words_per_page * (page + 1))
         next_page = (page + 1) if has_next_page else page
         data = [
-            {"text": " ".join(words_this_page)},
             {
+                "text": " ".join(words_this_page),
                 "quick_replies": [
                     {
                         "type": "show_block",

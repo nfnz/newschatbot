@@ -220,6 +220,8 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
         ).one_or_none() or Score(user_id=user_id, key_word="", score=0, date=date_today)
         if today_score.score == 2:
             return "Ještě jednu otázku a zítra se ti body násobí 2x\n"
+        elif today_score.score == 0:
+            return "Když dáš dnes 3 správné odpovědi, zítra se ti body násobí 2x"
         elif today_score.score < 2:
             return (
                 f"Dnes jsi správně odpověděl {today_score.score} {'otázek' if today_score == 0 else 'otázku'}, "

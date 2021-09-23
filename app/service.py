@@ -211,8 +211,14 @@ def get_question_from_db(questionID):
         {"messages": [{"quick_replies": buttons, "text": question.question_text}]}
     )
 
+
 def get_total_score(user_id: int) -> int:
-    return db.session.query(func.sum(Score.score)).filter(Score.user_id == user_id).scalar()
+    return (
+        db.session.query(func.sum(Score.score))
+        .filter(Score.user_id == user_id)
+        .scalar()
+    )
+
 
 def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
     def get_reminder() -> str:
@@ -393,6 +399,7 @@ def set_article_liked(article_id, user_data):
     reading.like = reading.like + 1
     db.session.commit()
 
+
 def text_new_user(user_data):
     first_name = user_data["first name"]
     return (
@@ -401,11 +408,16 @@ def text_new_user(user_data):
         f"Takže si spolu zahrajeme hru, jo? 😜"
     )
 
+
 def text_returned_user(user_data, total_score):
     first_name = user_data["first name"]
     date_today = date.today()
     date_week_ago = date_today - timedelta(days=7)
-    week_score = db.session.query(func.sum(Score.score)).filter(Score.date.between(date_week_ago, date_today)).scalar()
+    week_score = (
+        db.session.query(func.sum(Score.score))
+        .filter(Score.date.between(date_week_ago, date_today))
+        .scalar()
+    )
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1))
     if yesterday_score >= 5:
         final_text = (
@@ -433,20 +445,20 @@ def get_introduction_text(user_data):
         text = text_new_user(user_data)
     else:
         text = text_returned_user(user_data, total_score)
-    return jsonify({
-        "text": text,
-        "quick_replies": [
-            {
-                "type": "show_block",
-                "block_names": ["Articles"],
-                "title": "Jdeme na to",
-            },
-            {
-                "type": "show_block",
-                "block_names": ["Articles"],
-                "title": "Odběr",
-            },
-        ],
-    })
-
-    
+    return jsonify(
+        {
+            "text": text,
+            "quick_replies": [
+                {
+                    "type": "show_block",
+                    "block_names": ["Articles"],
+                    "title": "Jdeme na to",
+                },
+                {
+                    "type": "show_block",
+                    "block_names": ["Articles"],
+                    "title": "Odběr",
+                },
+            ],
+        }
+    )

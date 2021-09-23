@@ -1,7 +1,7 @@
 import feedparser
 
 from flask import jsonify, request
-from sqlalchemy import and_, or_, Date, cast
+from sqlalchemy import and_, or_, Date, cast, func
 from datetime import datetime, date, timedelta
 from flask_paginate import Pagination, get_page_args
 from typing import List
@@ -211,13 +211,13 @@ def get_question_from_db(questionID):
         {"messages": [{"quick_replies": buttons, "text": question.question_text}]}
     )
 
+def get_total_score(user_id: int) -> int:
+    return db.session.query(func.sum(Score.score)).filter(Score.user_id == user_id).scalar()
 
 def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
     def get_reminder() -> str:
         date_today = date.today()
-        today_score: Score = Score.query.filter(
-            and_(cast(Score.date, Date) == date_today, Score.user_id == user_id)
-        ).one_or_none() or Score(user_id=user_id, key_word="", score=0, date=date_today)
+        today_score: Score = get_score(user_id, date_today)
         if today_score.score == 2:
             return "Ještě jednu otázku a zítra se ti body násobí 2x\n"
         elif today_score.score == 0:
@@ -392,3 +392,61 @@ def set_article_liked(article_id, user_data):
     reading = _ensure_reading(user.id, article_id)
     reading.like = reading.like + 1
     db.session.commit()
+
+def text_new_user(user_data):
+    first_name = user_data["first name"]
+    return (
+        f"Hellou, {first_name}.\n"
+        f"Jsem moc rád, že jsi tu. Mým úkolem je totiž ukázat co nejvíce lidem, že mít přehled o dění ve světě a čtení novinek je zábava!\n\n"
+        f"Takže si spolu zahrajeme hru, jo? 😜"
+    )
+
+def text_returned_user(user_data, total_score):
+    first_name = user_data["first name"]
+    date_today = date.today()
+    date_week_ago = date_today - timedelta(days=7)
+    week_score = db.session.query(func.sum(Score.score)).filter(Score.date.between(date_week_ago, date_today)).scalar()
+    yesterday_score = get_score(user.id, date.today() - timedelta(days=1))
+    if yesterday_score >= 5:
+        final_text = (
+            f"Včera jsi odpověděl na {yesterday_score} otázek správně. Tvoje body se ti dnes násobí dvěma."
+            f"Mám pro tebe další zprávy."
+        )
+    elif yesterday_score >= 3:
+        final_text = final_text = (
+            f"Včera jsi odpověděl na {yesterday_score} otázky správně. Tvoje body se ti dnes násobí dvěma."
+            f"Mám pro tebe další zprávy."
+        )
+    else:
+        final_text = ""
+    return (
+        f"Á, {first_name}, vítej zpátky.\n"
+        f"Aktuálně máš celkem {total_score}. Za poslední týden jsi získal {week_score}.\n"
+        f"{final_text}"
+    )
+
+
+def get_introduction_text(user_data):
+    user = _ensure_user(user_data)
+    total_score = get_total_score(user.id)
+    if total_score == 0:
+        text = text_new_user(user_data)
+    else:
+        text = text_returned_user(user_data, total_score)
+    return jsonify({
+        "text": text,
+        "quick_replies": [
+            {
+                "type": "show_block",
+                "block_names": ["Articles"],
+                "title": "Jdeme na to",
+            },
+            {
+                "type": "show_block",
+                "block_names": ["Articles"],
+                "title": "Odběr",
+            },
+        ],
+    })
+
+    

@@ -418,7 +418,7 @@ def text_returned_user(user_data, user: User, total_score):
         .filter(Score.date.between(date_week_ago, date_today))
         .scalar()
     )
-    yesterday_score = get_score(user.id, date.today() - timedelta(days=1))
+    yesterday_score = get_score(user.id, date.today() - timedelta(days=1)).score
     if yesterday_score >= 5:
         final_text = (
             f"Včera jsi odpověděl na {yesterday_score} otázek správně. Tvoje body se ti dnes násobí dvěma."

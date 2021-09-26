@@ -417,7 +417,7 @@ def text_returned_user(user_data, user: User, total_score):
         db.session.query(func.sum(Score.score))
         .filter(Score.date.between(date_week_ago, date_today))
         .scalar()
-    )
+    ) or 0
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1)).score
     if yesterday_score >= 5:
         final_text = (
@@ -440,7 +440,7 @@ def text_returned_user(user_data, user: User, total_score):
 
 def get_introduction_text(user_data):
     user = _ensure_user(user_data)
-    total_score = get_total_score(user.id)
+    total_score = get_total_score(user.id) or 0
     if total_score == 0:
         text = text_new_user(user_data)
     else:

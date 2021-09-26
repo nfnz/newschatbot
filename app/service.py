@@ -409,7 +409,7 @@ def text_new_user(user_data):
     )
 
 
-def text_returned_user(user_data, total_score):
+def text_returned_user(user_data, user: User, total_score):
     first_name = user_data["first name"]
     date_today = date.today()
     date_week_ago = date_today - timedelta(days=7)
@@ -444,7 +444,7 @@ def get_introduction_text(user_data):
     if total_score == 0:
         text = text_new_user(user_data)
     else:
-        text = text_returned_user(user_data, total_score)
+        text = text_returned_user(user_data, user, total_score)
     return jsonify(
         {
             "text": text,

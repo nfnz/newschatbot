@@ -447,18 +447,22 @@ def get_introduction_text(user_data):
         text = text_returned_user(user_data, user, total_score)
     return jsonify(
         {
-            "text": text,
-            "quick_replies": [
+            "messages": [
                 {
-                    "type": "show_block",
-                    "block_names": ["Articles"],
-                    "title": "Jdeme na to",
-                },
-                {
-                    "type": "show_block",
-                    "block_names": ["Articles"],
-                    "title": "Odběr",
-                },
+                    "text": text,
+                    "quick_replies": [
+                        {
+                            "type": "show_block",
+                            "block_names": ["Articles"],
+                            "title": "Jdeme na to",
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": ["Articles"],
+                            "title": "Odběr",
+                        },
+                    ],
+                }
             ],
         }
     )

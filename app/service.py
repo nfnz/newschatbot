@@ -126,8 +126,27 @@ def update_articles_in_db():
     return counter
 
 
-def articles_to_chatfuel_list(articles):
+def articles_to_chatfuel_list(articles, current_page):
     results = [article.article_article_dto_converter() for article in articles.items]
+    # TODO: dont put this block on last page
+    results.append(
+        {
+            "title": "Více",
+            "buttons": [
+                {
+                    "type": "show_block",
+                    "block_names": ["Articles"],
+                    "set_attributes": {"Page": current_page + 1},
+                    "title": "Starší zprávy",
+                },
+                # {
+                #    "type": "show_block",
+                #    "block_names": ["Articles"],
+                #    "title": "Přečtené zprávy"
+                # }
+            ],
+        }
+    )
 
     return jsonify(
         {
@@ -152,7 +171,7 @@ def get_articles_from_db():
     articles = Article.query.order_by(Article.published_date.desc()).paginate(
         page=page, per_page=ROWS_PER_PAGE
     )
-    return articles_to_chatfuel_list(articles)
+    return articles_to_chatfuel_list(articles, page)
 
 
 def get_unread_articles_from_db(user_data):
@@ -173,7 +192,7 @@ def get_unread_articles_from_db(user_data):
         .order_by(Article.published_date.desc())
         .paginate(page=page, per_page=ROWS_PER_PAGE)
     )
-    return articles_to_chatfuel_list(articles)
+    return articles_to_chatfuel_list(articles, page)
 
 
 def get_article_from_db(pk_id, page=0):

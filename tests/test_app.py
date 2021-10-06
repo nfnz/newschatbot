@@ -221,7 +221,7 @@ def test_check_answer(app: Flask) -> None:
                                 },
                             ],
                             "template_type": "button",
-                            "text": "Trefa! Jde ti to. 👍\nDám ti 2 body, celkem máš 1 bodů.\nDnes jsi správně odpověděl 1 otázku, když dáš 3, zítra se ti body násobí 2x",
+                            "text": "Trefa! Jde ti to. 👍\nDám ti 1 bod, celkem máš 1 bod.\nDnes jsi správně odpověděl 1 otázku, když dáš 3, zítra se ti body násobí 2x",
                         },
                         "type": "template",
                     }

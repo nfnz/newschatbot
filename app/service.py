@@ -235,6 +235,13 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
             )
         return ""
 
+    def get_score_correct_shape(score: int) -> str:
+        if score == 1:
+            return "bod"
+        if score < 5:
+            return "body"
+        return "bodů"
+
     text = ""
     if correct_answer:
         text += "Trefa! Jde ti to. 👍\n"
@@ -242,10 +249,10 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
         # it would be better to do the sum directly in database,
         # I just don't know how now
         total_score = sum(score.score for score in user_score)
-        if yesterday_score >= BONUS_START:
-            text += f"Dám ti 1 bod, celkem máš {total_score} bodů.\n"
+        if yesterday_score < BONUS_START:
+            text += f"Dám ti 1 bod, celkem máš {total_score} {get_score_correct_shape(total_score)}.\n"
         else:
-            text += f"Dám ti 2 body, celkem máš {total_score} bodů.\n"
+            text += f"Dám ti 2 body, celkem máš {total_score} {get_score_correct_shape(total_score)}.\n"
         text += get_reminder()
         return text
 

@@ -220,6 +220,16 @@ def get_total_score(user_id: int) -> int:
     )
 
 
+def get_score_correct_shape(score: int) -> str:
+    if score == 0:
+        return "bodů"
+    if score == 1:
+        return "bod"
+    if score < 5:
+        return "body"
+    return "bodů"
+
+
 def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
     def get_reminder() -> str:
         date_today = date.today()
@@ -234,13 +244,6 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
                 f"když dáš 3, zítra se ti body násobí 2x"
             )
         return ""
-
-    def get_score_correct_shape(score: int) -> str:
-        if score == 1:
-            return "bod"
-        if score < 5:
-            return "body"
-        return "bodů"
 
     text = ""
     if correct_answer:
@@ -426,21 +429,17 @@ def text_returned_user(user_data, user: User, total_score):
         .scalar()
     ) or 0
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1)).score
-    if yesterday_score >= 5:
+    final_text = ""
+    if yesterday_score >= 3:
         final_text = (
-            f"Včera jsi odpověděl na {yesterday_score} otázek správně. Tvoje body se ti dnes násobí dvěma."
+            f"Včera jsi získal {yesterday_score} {get_score_correct_shape(yesterday_score)}. "
+            f"Tvoje body se ti dnes násobí dvěma. "
             f"Mám pro tebe další zprávy."
         )
-    elif yesterday_score >= 3:
-        final_text = final_text = (
-            f"Včera jsi odpověděl na {yesterday_score} otázky správně. Tvoje body se ti dnes násobí dvěma."
-            f"Mám pro tebe další zprávy."
-        )
-    else:
-        final_text = ""
     return (
         f"Á, {first_name}, vítej zpátky.\n"
-        f"Aktuálně máš celkem {total_score}. Za poslední týden jsi získal {week_score}.\n"
+        f"Aktuálně máš celkem {total_score} {get_score_correct_shape(total_score)}. "
+        f"Za poslední týden jsi získal {week_score} {get_score_correct_shape(week_score)}.\n"
         f"{final_text}"
     )
 

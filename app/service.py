@@ -452,7 +452,11 @@ def text_returned_user(user_data, user: User, total_score):
     date_week_ago = date_today - timedelta(days=7)
     week_score = (
         db.session.query(func.sum(Score.score))
-        .filter(Score.date.between(date_week_ago, date_today))
+        .filter(
+            and_(
+                Score.date.between(date_week_ago, date_today), Score.user_id == user.id
+            )
+        )
         .scalar()
     ) or 0
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1)).score

@@ -68,6 +68,52 @@ def test_get_articles_v1_get(app: Flask) -> None:
         }
 
 
+def test_introduction_existing_user(app: Flask) -> None:
+    dsn = app.config["SQLALCHEMY_DATABASE_URI"]
+    with psycopg2.connect(dsn=dsn) as conn:
+        with conn.cursor() as cursor:
+            cursor.executemany(
+                "INSERT INTO users(messenger_id) VALUES(%s)",
+                (
+                    ("user1",),
+                    ("user2",),
+                ),
+            )
+            cursor.executemany(
+                "INSERT INTO score(user_id, score, date) VALUES(%s, %s, %s)",
+                (
+                    (1, 5, date.today().isoformat()),
+                    (2, 3, date.today().isoformat()),
+                ),
+            )
+
+    with app.test_client() as client:
+        response = client.post(
+            "/v1/introduction",
+            json={"messenger user id": "user1", "first name": "Ferda"},
+        )
+        assert response.json == {
+            "messages": [
+                {
+                    "quick_replies": [
+                        {
+                            "block_names": ["Articles"],
+                            "title": "Jdeme na to",
+                            "type": "show_block",
+                        },
+                        {
+                            "block_names": ["Articles"],
+                            "title": "Odběr",
+                            "type": "show_block",
+                        },
+                    ],
+                    "text": "Á, Ferda, vítej zpátky.\nAktuálně máš celkem 5 "
+                    "bodů. Za poslední týden jsi získal 5 bodů.\n",
+                }
+            ]
+        }
+
+
 def test_get_article_v1_get(app: Flask) -> None:
     with app.test_client() as client:
         response = client.get("/v1/articles/1/")

@@ -126,8 +126,24 @@ def update_articles_in_db():
     return counter
 
 
-def articles_to_chatfuel_list(articles):
+def articles_to_chatfuel_list(articles, current_page, total_articles):
     results = [article.article_article_dto_converter() for article in articles.items]
+    if (
+        current_page * ROWS_PER_PAGE < total_articles
+    ):  # do not append when there are no more articles
+        results.append(
+            {
+                "title": "Více",
+                "buttons": [
+                    {
+                        "type": "show_block",
+                        "block_names": ["Articles"],
+                        "set_attributes": {"Page": current_page + 1},
+                        "title": "Starší zprávy",
+                    },
+                ],
+            }
+        )
 
     return jsonify(
         {
@@ -152,7 +168,8 @@ def get_articles_from_db():
     articles = Article.query.order_by(Article.published_date.desc()).paginate(
         page=page, per_page=ROWS_PER_PAGE
     )
-    return articles_to_chatfuel_list(articles)
+    total_articles = Article.query.count()
+    return articles_to_chatfuel_list(articles, page, total_articles)
 
 
 def get_unread_articles_from_db(user_data):
@@ -171,9 +188,19 @@ def get_unread_articles_from_db(user_data):
         .filter(or_(Reading.refused == 0, Reading.refused == None))
         .filter(or_(Reading.read == 0, Reading.read == None))
         .order_by(Article.published_date.desc())
-        .paginate(page=page, per_page=ROWS_PER_PAGE)
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)
     )
-    return articles_to_chatfuel_list(articles)
+    total_articles = (
+        Article.query.outerjoin(
+            Reading,
+            and_(Article.id == Reading.article_id, Reading.user_id == user.id),
+            aliased=True,
+        )
+        .filter(or_(Reading.refused == 0, Reading.refused == None))
+        .filter(or_(Reading.read == 0, Reading.read == None))
+        .count()
+    )
+    return articles_to_chatfuel_list(articles, page, total_articles)
 
 
 def get_article_from_db(pk_id, page=0):

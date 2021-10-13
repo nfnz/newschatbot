@@ -11,7 +11,6 @@ from app.model import Article, Reading, User, db, Questions, Answers, Score
 
 ROWS_PER_PAGE = 5
 
-
 BONUS_START = 3
 
 
@@ -226,13 +225,6 @@ def get_question_from_db(questionID):
             "type": "show_block",
         }
         buttons.append(d)
-    buttons.append(
-        {
-            "url": article.link_src,
-            "title": "přejít na článek",
-            "type": "web_url",
-        }
-    )
 
     return jsonify(
         {"messages": [{"quick_replies": buttons, "text": question.question_text}]}

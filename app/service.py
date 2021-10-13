@@ -262,7 +262,7 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
                 f"Dnes jsi správně odpověděl {today_score.score} {'otázek' if today_score == 0 else 'otázku'}, "
                 f"když dáš 3, zítra se ti body násobí 2x"
             )
-        return ""
+        return "Zítra se ti body násobí 2x"
 
     text = ""
     if correct_answer:

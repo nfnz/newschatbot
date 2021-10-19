@@ -125,6 +125,20 @@ def update_articles_in_db():
     return counter
 
 
+def _get_user_week_score(user_id: int) -> int:
+    date_today = date.today()
+    date_week_ago = date_today - timedelta(days=7)
+    return (
+        db.session.query(func.sum(Score.score))
+        .filter(
+            and_(
+                Score.date.between(date_week_ago, date_today), Score.user_id == user_id
+            )
+        )
+        .scalar()
+    ) or 0
+
+
 def articles_to_chatfuel_list(articles, current_page, total_articles):
     results = [article.article_article_dto_converter() for article in articles.items]
     if (
@@ -157,6 +171,15 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
             ],
         }
         results = [previous] + results
+
+    results.append(
+        {
+            "title": "To mi stačí",
+            "buttons": [
+                {"type": "show_block", "block_names": ["Outro"], "title": "To mi stačí"}
+            ],
+        }
+    )
 
     return jsonify(
         {
@@ -454,17 +477,7 @@ def text_new_user(user_data):
 
 def text_returned_user(user_data, user: User, total_score):
     first_name = user_data["first name"]
-    date_today = date.today()
-    date_week_ago = date_today - timedelta(days=7)
-    week_score = (
-        db.session.query(func.sum(Score.score))
-        .filter(
-            and_(
-                Score.date.between(date_week_ago, date_today), Score.user_id == user.id
-            )
-        )
-        .scalar()
-    ) or 0
+    week_score = _get_user_week_score(user.id)
     yesterday_score = get_score(user.id, date.today() - timedelta(days=1)).score
     final_text = ""
     if yesterday_score >= 3:
@@ -507,5 +520,52 @@ def get_introduction_text(user_data):
                     ],
                 }
             ],
+        }
+    )
+
+
+def get_outro_text(user_data) -> str:
+    user = _ensure_user(user_data)
+    total_score = get_total_score(user.id) or 0
+    today_score = get_score(user.id, date.today()).score
+    if total_score == 0:
+        return ""
+
+    week_score = _get_user_week_score(user.id)
+    first_name = user_data["first name"]
+    text = f"Á, {first_name}, Už odcházíš?\n"
+    text += (
+        f"Aktuálně máš celkem {total_score} {get_score_correct_shape(total_score)}. "
+    )
+    text += f"Za poslední týden jsi získal {week_score} {get_score_correct_shape(week_score)}\n"
+    if today_score >= BONUS_START:
+        text += f"Dnes jsi odpověděl na {total_score} "
+        text += f"{'otázky' if today_score <= 4 else 'otázek'}. "
+        text += f"Tvoje body se ti zítra násobí dvěma."
+    elif today_score == 2:
+        text += "Tref ještě jednu správnou odpověď a zítra se ti body násobí 2x"
+    else:
+        text += "Dnes jsi správně odpověděl jednu otázku, když dáš 3 body, "
+        text += "zítra se ti body násobí 2x"
+
+    return jsonify(
+        {
+            "messages": [
+                {
+                    "text": text,
+                    "quick_replies": [
+                        {
+                            "type": "show_block",
+                            "block_names": ["Articles"],
+                            "title": "Ještě to zkusím",
+                        },
+                        {
+                            "type": "show_block",
+                            "block_names": ["ByeBye"],
+                            "title": "Čau",
+                        },
+                    ],
+                }
+            ]
         }
     )

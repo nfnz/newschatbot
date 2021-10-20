@@ -144,6 +144,20 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
             }
         )
 
+    if current_page > 1:
+        previous = {
+            "title": "Předchozí",
+            "buttons": [
+                {
+                    "type": "show_block",
+                    "block_names": ["Articles"],
+                    "set_attributes": {"Page": current_page - 1},
+                    "title": "Předchozí zprávy",
+                }
+            ],
+        }
+        results = [previous] + results
+
     return jsonify(
         {
             "messages": [

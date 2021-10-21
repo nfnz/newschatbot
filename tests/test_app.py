@@ -7,7 +7,7 @@ from datetime import date, timedelta
 # TODO: is test_get_articles_v1_post necessary?
 def test_get_articles_v1_get(app: Flask) -> None:
     with app.test_client() as client:
-        response = client.get("/v1/articles/")
+        response = client.get("/v1/articles/?page=1")
         assert response.status_code == 200
         assert response.json == {
             "messages": [

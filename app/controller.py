@@ -17,6 +17,7 @@ from app.service import (
     set_article_read,
     set_article_liked,
     get_introduction_text,
+    get_outro_text,
 )
 
 api = Blueprint("api", __name__)
@@ -25,6 +26,11 @@ api = Blueprint("api", __name__)
 @api.route("/v1/introduction", methods=["POST"])
 def get_introduction():
     return get_introduction_text(request.json)
+
+
+@api.route("/v1/outro", methods=["POST"])
+def get_outro():
+    return get_outro_text(request.json)
 
 
 @api.route(

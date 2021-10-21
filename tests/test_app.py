@@ -57,6 +57,16 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                     "image_url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/03/babis1.jpeg",
                                     "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)",
                                 },
+                                {
+                                    "title": "To mi stačí",
+                                    "buttons": [
+                                        {
+                                            "type": "show_block",
+                                            "block_names": ["Outro"],
+                                            "title": "To mi stačí",
+                                        }
+                                    ],
+                                },
                             ],
                             "image_aspect_ratio": "square",
                             "template_type": "generic",
@@ -199,7 +209,17 @@ def test_article_not_interested(app: Flask) -> None:
                                     ],
                                     "image_url": "https://www.ctidoma.cz/sites/default/files/styles/seznam/public/imgs/03/babis1.jpeg",
                                     "title": "Babiš nám slíbil očkování, místo toho chce dát vakcínu puberťákům. Nechá nás klidně umřít, říká Jarmila (72)",
-                                }
+                                },
+                                {
+                                    "title": "To mi stačí",
+                                    "buttons": [
+                                        {
+                                            "type": "show_block",
+                                            "block_names": ["Outro"],
+                                            "title": "To mi stačí",
+                                        }
+                                    ],
+                                },
                             ],
                             "image_aspect_ratio": "square",
                             "template_type": "generic",

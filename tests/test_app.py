@@ -147,26 +147,15 @@ def test_get_article_v1_get(app: Flask) -> None:
                             "block_names": ["Question"],
                             "set_attributes": {
                                 "ArticleID": 1,
-                                "Like": 1,
                                 "Page": 0,
                                 "QuestionID": 1,
                             },
-                            "title": "super",
-                            "type": "show_block",
-                        },
-                        {
-                            "block_names": ["Question"],
-                            "set_attributes": {
-                                "ArticleID": 1,
-                                "Page": 0,
-                                "QuestionID": 1,
-                            },
-                            "title": "ok",
+                            "title": "Dál",
                             "type": "show_block",
                         },
                         {
                             "block_names": ["Articles"],
-                            "title": "nuda",
+                            "title": "Pryč",
                             "type": "show_block",
                         },
                     ],

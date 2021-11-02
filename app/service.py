@@ -287,20 +287,20 @@ def get_score_correct_shape(score: int) -> str:
 
 
 def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) -> str:
-    def get_reminder() -> str:
-        date_today = date.today()
-        today_score: Score = get_score(user_id, date_today)
-        if today_score.score == 2:
+    def get_reminder(answered_questions: int) -> str:
+        if answered_questions == 2:
             return "Ještě jednu otázku a zítra se ti body násobí 2x\n"
-        elif today_score.score == 0:
+        elif answered_questions == 0:
             return "Když dáš dnes 3 správné odpovědi, zítra se ti body násobí 2x"
-        elif today_score.score < 2:
+        elif answered_questions < 2:
             return (
-                f"Dnes jsi správně odpověděl {today_score.score} {'otázek' if today_score == 0 else 'otázku'}, "
+                f"Dnes jsi správně odpověděl {answered_questions} {'otázek' if answered_questions == 0 else 'otázku'}, "
                 f"když dáš 3, zítra se ti body násobí 2x"
             )
         return "Zítra se ti body násobí 2x"
 
+    today_score = get_score(user_id, date=date.today())
+    answered_questions = today_score.score // (2 if yesterday_score >= 3 else 1)
     text = ""
     if correct_answer:
         text += "Trefa! Jde ti to. 👍\n"
@@ -312,11 +312,11 @@ def get_answer_text(correct_answer: bool, yesterday_score: int, user_id: int) ->
             text += f"Dám ti 1 bod, celkem máš {total_score} {get_score_correct_shape(total_score)}.\n"
         else:
             text += f"Dám ti 2 body, celkem máš {total_score} {get_score_correct_shape(total_score)}.\n"
-        text += get_reminder()
+        text += get_reminder(answered_questions)
         return text
 
     text += "To se nepovedlo, ale nevadí 👍"
-    text += get_reminder()
+    text += get_reminder(answered_questions)
     return text
 
 

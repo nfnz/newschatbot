@@ -10,8 +10,8 @@ from app.config import FEED_URL
 from app.model import Article, Reading, User, db, Questions, Answers, Score
 
 ROWS_PER_PAGE = 5
-
 BONUS_START = 3
+LOGO = "https://www.ctidoma.cz/sites/all/themes/ctidoma2/logo-ctidoma.png"
 
 
 def get_mock_text():
@@ -147,6 +147,7 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
         results.append(
             {
                 "title": "Více",
+                "image_url": LOGO,
                 "buttons": [
                     {
                         "type": "show_block",
@@ -161,6 +162,7 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
     if current_page > 1:
         previous = {
             "title": "Předchozí",
+            "image_url": LOGO,
             "buttons": [
                 {
                     "type": "show_block",
@@ -175,6 +177,7 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
     results.append(
         {
             "title": "To mi stačí",
+            "image_url": LOGO,
             "buttons": [
                 {"type": "show_block", "block_names": ["Outro"], "title": "To mi stačí"}
             ],

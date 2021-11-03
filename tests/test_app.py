@@ -59,6 +59,7 @@ def test_get_articles_v1_get(app: Flask) -> None:
                                 },
                                 {
                                     "title": "To mi stačí",
+                                    "image_url": "https://www.ctidoma.cz/sites/all/themes/ctidoma2/logo-ctidoma.png",
                                     "buttons": [
                                         {
                                             "type": "show_block",
@@ -201,6 +202,7 @@ def test_article_not_interested(app: Flask) -> None:
                                 },
                                 {
                                     "title": "To mi stačí",
+                                    "image_url": "https://www.ctidoma.cz/sites/all/themes/ctidoma2/logo-ctidoma.png",
                                     "buttons": [
                                         {
                                             "type": "show_block",

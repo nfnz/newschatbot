@@ -166,7 +166,7 @@ def articles_to_chatfuel_list(articles, current_page, total_articles):
                     "type": "show_block",
                     "block_names": ["Articles"],
                     "set_attributes": {"Page": current_page - 1},
-                    "title": "Předchozí zprávy",
+                    "title": "Novější zprávy",
                 }
             ],
         }
@@ -533,7 +533,7 @@ def get_outro_text(user_data) -> str:
 
     week_score = _get_user_week_score(user.id)
     first_name = user_data["first name"]
-    text = f"Á, {first_name}, Už odcházíš?\n"
+    text = f"Ahh, {first_name}, Už odcházíš?\n"
     text += (
         f"Aktuálně máš celkem {total_score} {get_score_correct_shape(total_score)}. "
     )

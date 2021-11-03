@@ -60,7 +60,7 @@ class Article(db.Model):
         # TODO case if article has more than one question
         question = Questions.query.filter(Questions.news_id == self.id).limit(1).one()
         words = self.text.split()
-        words_per_page = 25
+        words_per_page = 50
         words_this_page = words[words_per_page * page : (words_per_page * (page + 1))]
         has_next_page = len(words) > (words_per_page * (page + 1))
         next_page = (page + 1) if has_next_page else page

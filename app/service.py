@@ -542,14 +542,14 @@ def get_outro_text(user_data) -> str:
     )
     text += f"Za poslední týden jsi získal {week_score} {get_score_correct_shape(week_score)}\n"
     if today_score >= BONUS_START:
-        text += f"Dnes jsi odpověděl na {total_score} "
+        text += f"Dnes jsi odpověděl na {today_score} "
         text += f"{'otázky' if today_score <= 4 else 'otázek'}. "
         text += f"Tvoje body se ti zítra násobí dvěma."
     elif today_score == 2:
         text += "Tref ještě jednu správnou odpověď a zítra se ti body násobí 2x"
     else:
-        text += "Dnes jsi správně odpověděl jednu otázku, když dáš 3 body, "
-        text += "zítra se ti body násobí 2x"
+        text += "Zkus to ještě, když dáš 3 otázky, "
+        text += "zítra se ti body násobí 2x."
 
     return jsonify(
         {

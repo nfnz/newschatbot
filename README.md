@@ -18,7 +18,14 @@ Aplikace používá Chatfuel.com a backend v Python. V Chatfuel je definované w
 
 Python Flask REST API application to support Chatfuels Chatbot. Deployment is done with Serverless Framework to AWS Lambda. Application is connected to Postgres database.
 
-### Init setup
+### Infrastructure
+Infrastructure for backend and database is setup by Terraform(IaaC), deployment is automated by github actions. (It is required to specify AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets in github.)
+  
+### Deployment
+
+Newschatbot backend is deployed using Serverless framework, automated by github actions. Function definition is in serverless.yml .
+
+### Init dev setup
 Python  setup
 ```
 python3 -m venv env
@@ -37,6 +44,7 @@ flask db upgrade
 Flask application is run from app/main.py
 
 ### Database migration
+  
 Creates a migration repository
 ```
 flask db init 
@@ -49,12 +57,8 @@ Performs migration in the db.
 ```
 flask db update
 ```
+AWS PostgreSQL Database is not accessible directly, VPN needs to be setup.
 
-### Serverless deployment
-Node setup
-```
-npm ci
-```
 
 ### Contributing
 #### Before pushing changes

@@ -39,3 +39,7 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+  cronHandler:
+    handler: app/articles_download.begin_import
+    events:
+      - schedule: cron(5 * * * ? *)

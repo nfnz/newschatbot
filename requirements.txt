@@ -21,4 +21,6 @@ sgmllib3k==1.0.0
 six==1.16.0
 SQLAlchemy==1.4.15
 Werkzeug==1.0.1
-black==21.7b0
+black==21.7b0requests
+requests
+xmltodict

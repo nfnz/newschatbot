@@ -4,6 +4,9 @@ Vychází ze studie: https://www.nfnz.cz/studie-a-analyzy/cesi-a-zpravodajstvi/
 
 Chatbot přináší kvalitní informace lidem, kteří o ně mají sice zájem, ale zpravodajské servery pro ně nejsou vhodnou formou, nebo nemají čas, chuť či disciplínu zprávy sledovat. Chatbot u'funguje pro konkrétní redakci, která dodává obsah prostřednictvím RSS. Redakce díky aplikaci získávají nové čtenáře. Po přečtení zpráv si uživatel může udělat kvíz a získat body. Čtenář je motivován každý den číst alespoň 3 zprávy. 
 
+## Jak to funguje
+Koncept projektu, jeho přidanou hodnotu uživateli, cíl a benefity najdete v prezentaci: https://docs.google.com/presentation/d/1hS9tdPj9EITdcgzo-2qJ_53amQ4pWriF9H6l-a5WkCk/
+
 # Licence
 MIT license - https://github.com/nfnz/newschatbot/blob/master/LICENSE
 

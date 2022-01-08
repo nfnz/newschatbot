@@ -14,8 +14,8 @@ MIT license - https://github.com/nfnz/newschatbot/blob/master/LICENSE
 Aplikace používá Chatfuel.com a backend v Python. V Chatfuel je definované workflow a bloky, které volají prostřednictvím API backend.
 
 ## Chatfuel
-1. Je třeba zkopírovat chatbota https://dashboard.chatfuel.com/bot/608e9a40c335e4231249d6b9/flows/608ed607c335e42312842da0 (https://m.me/105203808395233)
-2. Upravit v jednotlivých blocích URL na API podle toho, kde je nasazený backend. V našem případě je to např. https://v1r0yf8r51.execute-api.eu-west-3.amazonaws.com/dev/v1/<APIname>
+1. Je třeba vytvořit chatfuel chatbot podle zadání v https://github.com/nfnz/newschatbot/blob/master/Chatfuel%20documentation.docx, případně se lze inspirovat v https://dashboard.chatfuel.com/bot/608e9a40c335e4231249d6b9/flows/608ed607c335e42312842da0 (a https://m.me/105203808395233)
+3. Upravit v jednotlivých blocích URL na API podle toho, kde je nasazený backend. V našem případě je to např. https://v1r0yf8r51.execute-api.eu-west-3.amazonaws.com/dev/v1/<APIname>
 
 ## Newschatbot backend
 

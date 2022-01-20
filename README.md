@@ -1,22 +1,22 @@
-# Idea Chatbota Newsie 
+## Idea Chatbota Newsie 
 Zpravodajské články jen těžko obstojí v konkurenci zábavných obsahů sociálních sítí, her a interaktivních formátů. Zaujměte své čtenáře Chatbotem Newsie, který bude představovat zprávy postupně, bude se uživatele ptát a motivovat ho, aby se ke zprávám vracel.
 
-# Inovace zpravodajského storytellingu 
+## Inovace zpravodajského storytellingu 
 Projekt vznikl ve spoluprácí Nadačního fondu nezávislé žurnalistiky a Česko.Digital. Cílem bylo navrhnout prototyp, který by dostat zpravodajství k lidem, kteří zprávy nečtou ([dle výzkumu](https://www.nfnz.cz/studie-a-analyzy/cesi-a-zpravodajstvi/) se jedná o více než 30 % populace). Zapojili jsme 150 expertních dobrovolníků a novináře z 10 redakcí. Ověřovali jsme si hypotézy, ptali se novinářů i mediálních domů. Idea chatbota zvítězila v konkurenci téměř stovky nápadů.
 
-# Koncept v kostce
+## Koncept v kostce
 Chatbot funguje na platformě [Messenger](https://cs.wikipedia.org/wiki/Facebook_Messenger) a přináší informace o dění kolem lidem, kteří o ně mají sice zájem, ale zpravodajské servery pro ně nejsou vhodnou formou, nebo nemají čas, chuť či disciplínu zprávy sledovat. Chatbot funguje pro konkrétní redakci, která dodává obsah prostřednictvím RSS. Redakce získávají nové, především mladé čtenáře. Po přečtení zpráv si uživatel může udělat kvíz a získat body. Čtenář je motivován každý den číst alespoň 3 zprávy. 
 
 <img width="1434" alt="obrazek" src="https://user-images.githubusercontent.com/69157075/150365703-8d299281-f401-4767-91a8-3adfbe927177.png">
 
 
-## Jak to funguje
+# Jak to funguje
 Koncept projektu, jeho přidanou hodnotu uživateli, cíl a benefity najdete v prezentaci [Chatbot Newsie](https://docs.google.com/presentation/d/1hS9tdPj9EITdcgzo-2qJ_53amQ4pWriF9H6l-a5WkCk/). 
 
-# Licence
+## Licence
 Projekt je open source, kdokoliv má právo kdykoliv využít dokumentaci pro své účely. Na projekt platí MIT license. Více MIT licenci naleznete na [popisu na GitHub](https://github.com/nfnz/newschatbot/blob/master/LICENSE).
 
-# Návod pro spuštění v nové redakci
+## Návod pro spuštění v nové redakci
 Redakce bude potřebovat provést 3 hlavní kroky:
   1) Vytvořit si profil v online platformě [Chatfuel](Chatfuel.com), která zprostředkovává chování chatbota v Messengeru.
   2) Druhým krokem bude spusti backend chatbota v jazyce Python.

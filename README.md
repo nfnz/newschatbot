@@ -15,7 +15,7 @@ Aplikace používá Chatfuel.com a backend v Python. V Chatfuel je definované w
 
 ## Chatfuel
 Abyste nastavili chování chatbota tak, jak jsme ho v tomto projektu navrhli, je třeba využít nástroje Chatfuel.com. V tomto nástroji nastavíte, jak bude chatbot na uživatele reagovat, jak mu bude zprávy zobrazovat a jaké otázky mu bude klást.
-1. Je třeba nastavit si chatbot v Chatfuel podle následujícího zadání v https://github.com/nfnz/newschatbot/blob/master/Chatfuel%20documentation.docx, případně se lze inspirovat v https://dashboard.chatfuel.com/bot/608e9a40c335e4231249d6b9/flows/608ed607c335e42312842da0 (a https://m.me/105203808395233)
+1. Je třeba nastavit si chatbot v Chatfuel podle následujícího [zadání](https://docs.google.com/document/d/18zOGlWSjJWydNlYczLIvLEuoPa8K857VnnpsQ0-8Bxo/edit?usp=sharing)
 3. Upravit v jednotlivých blocích URL na API podle toho, kde je nasazený backend. V našem případě je to např. https://v1r0yf8r51.execute-api.eu-west-3.amazonaws.com/dev/v1/<APIname>
 
 ## Newschatbot backend

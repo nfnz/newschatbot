@@ -47,7 +47,7 @@ curl http://127.0.0.1:5000/v1/articles/
 ### Development setup
 **Python setup**
 
-Creation of virtual environment and installation of dependencies. (For Mac users please change greenlet==0.4.10 to greenlet==0.4.16 in requirements.txt) 
+Creation of virtual environment and installation of dependencies. You might encounter problems with installing the `greenlet` module. Mac users might need to edit `requirements.txt` and change `greenlet==0.4.10` to `greenlet==0.4.16`. Also, if you are using Python 3.10 you might need to change `greenlet==0.4.10` to `greenlet==1.1`.
 ```
 python -m venv env
 source env/bin/activate

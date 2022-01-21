@@ -24,36 +24,66 @@ Python Flask REST API application to support Chatfuels Chatbot. Deployment is do
 
 ### Infrastructure
 Infrastructure for backend and database is setup by Terraform(IaaC), deployment is automated by github actions. (It is required to specify AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets in github.)
+
+AWS PostgreSQL Database is not accessible directly, VPN needs to be setup. To get access please contact @martinwenisch
   
 ### Deployment
 
 Newschatbot backend is deployed using Serverless framework, automated by github actions. Function definition is in serverless.yml .
 
-### Init dev setup
-Python  setup
+### Local Deployment
+**Launch the services with Docker Compose:**
+
 ```
-python3 -m venv env
+docker-compose up
+```
+It starts the flask application, postgreSQL server and runs database migrations.
+
+Can be tested with following:
+```
+curl http://127.0.0.1:5000/v1/articles/
+```
+
+### Development setup
+**Python setup**
+
+Creation of virtual environment and installation of dependencies. (For Mac users please change greenlet==0.4.10 to greenlet==0.4.16 in requirements.txt) 
+```
+python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
 ```
 
-Database setup
+**Database setup**
+
+Running PostgreSQL with Docker Compose: (Alternatively PostgreSQL can be downloaded at https://www.postgresql.org/download/)
 ```
 cd dockers/postgres/
 docker-compose up
+```
+**Database migration**, 
 
+export environment variable FLASK_APP (use _export_ in linux instead of _set_)
+```
 set FLASK_APP=app/main:app;
+```
+export environment variable DB_CONNSTR (use _export_ in linux instead of _set_)
+```
+set DB_CONNSTR="postgresql://postgres:postgres@localhost:5432/feed_parser"
+```
+run the migration,
+```
 flask db upgrade
+```
+**Application start**
+```
+flask run
 ```
 Flask application is run from app/main.py
 
 ### Database migration
-  
-Creates a migration repository
-```
-flask db init 
-```
-Generates migration file based on the model.
+
+Generates migration file based on the model (app/model.py).
 ```
 flask db migrate
 ```
@@ -61,8 +91,6 @@ Performs migration in the db.
 ```
 flask db update
 ```
-AWS PostgreSQL Database is not accessible directly, VPN needs to be setup.
-
 
 ### Contributing
 #### Before pushing changes

@@ -39,6 +39,8 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+    environment:
+      DB_CONNSTR: "postgresql://newschatbotdevelopment:Wlk8skrHKvZEbM6Gw@database.internal.newschatbot.ceskodigital.net:5432/newschatbotdevelopment"
   cronHandler:
     handler: app/articles_download.begin_import
     events:

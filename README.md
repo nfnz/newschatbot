@@ -29,87 +29,89 @@ Online nástroj Chatfuel nabízí několik verzí, my používali verzi za 15$/m
 
 ## Newschatbot backend
 
-Python Flask REST API application to support Chatfuels Chatbot. Deployment is done with Serverless Framework to AWS Lambda. Application is connected to Postgres database.
+Python Flask REST API poskytující data pro Chatfuels Chatbot. Nasazení probíhá pomocí [Serverless Frameworku](https://www.serverless.com/) na prostředí [AWS Lambda](https://aws.amazon.com/lambda/). Aplikace je připojena k Postgres databázi.
 
-### Infrastructure
-Infrastructure for backend and database is setup by Terraform(IaaC), deployment is automated by github actions. (It is required to specify AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets in github.)
+### Infrastruktura
+Infrastruktura pro backend a databázi je spravována pomocí [Terraformu](https://www.terraform.io/) (IaaC - Infrastructure-as-a-code). Nasazení probíhá automaticky pomocí [Github Actions](https://github.com/nfnz/newschatbot/actions). (Na Githubu je potřeba nastavit [proměnné](https://docs.github.com/en/actions/security-guides/encrypted-secrets) AWS_ACCESS_KEY_ID a AWS_SECRET_ACCESS_KEY.)
 
-AWS PostgreSQL Database is not accessible directly, VPN needs to be setup. To get access please contact @martinwenisch
+AWS PostgreSQL databáze není přístupná přímo. Je přístupná pouze přes VPN. Pro získání přístupu kontaktujte @martinwenisch
   
-### Deployment
+### Nasazení
 
-Newschatbot backend is deployed using Serverless framework, automated by github actions. Function definition is in serverless.yml .
+Nasazení probíhá pomocí [Serverless Frameworku](https://www.serverless.com/) na prostředí [AWS Lambda](https://aws.amazon.com/lambda/). Definice funkcí je v souboru `serverless.yml`.
 
-### Local Deployment
-**Launch the services with Docker Compose:**
+### Lokální vývoj
+**Spouštění pomocí Docker Compose:**
 
 ```
 docker-compose up
 ```
-It starts the flask application, postgreSQL server and runs database migrations.
+Spustí Flask aplikaci, PostgreSQL server a databázové migrace.
 
-Can be tested with following:
+Ověřit, že spuštění proběhlo v pořádku, můžete příkazem:
 ```
 curl http://127.0.0.1:5000/v1/articles/
 ```
 
-### Development setup
-**Python setup**
+Ten byl měl vrátit JSON se seznamem výchozích článků.
 
-Project is meant to be run with Python 3.6
+### Vývoj
+**Nastavení Pythonu**
 
-Creation of virtual environment and installation of dependencies. You might encounter problems with installing the `greenlet` module. (For Mac users please change greenlet==0.4.10 to greenlet==0.4.16 in requirements.txt) 
+Projekt využívá Python verze 3.6
+
+Vytvoření virtuálního prostředí a instalace závislostí: Při instalaci můžete narazit na problém s balíčkem `greenlet`. (Na Mac zařízení změňte v `requirements.txt` greenlet==0.4.10 na greenlet==0.4.16) 
 ```
 python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
 ```
 
-**Database setup**
+**Nastavení databáze**
 
-Running PostgreSQL with Docker Compose: (Alternatively PostgreSQL can be downloaded at https://www.postgresql.org/download/)
+Spuštění PostgreSQL pomocí Docker Compose: (Případně si můžete PostgreSQL stáhnout a nainstalovat z https://www.postgresql.org/download/)
 ```
 cd dockers/postgres/
 docker-compose up
 ```
-**Database migration**, 
+**Databázové migrace**, 
 
-export environment variable FLASK_APP (use _export_ in linux instead of _set_)
+Nastavte v terminálu proměnnou prostředí FLASK_APP (na Linux prostředí místo _set_ použijte _export_)
 ```
 set FLASK_APP=app/main:app;
 ```
-export environment variable DB_CONNSTR (use _export_ in linux instead of _set_)
+Nastavte v terminálu proměnnou prostředíDB_CONNSTR (na Linux prostředí místo _set_ použijte _export_)
 ```
 set DB_CONNSTR="postgresql://postgres:postgres@localhost:5432/feed_parser"
 ```
-run the migration,
+Spuštění migrací
 ```
 flask db upgrade
 ```
-**Application start**
+**Spuštění aplikace**
 ```
 flask run
 ```
-Flask application is run from app/main.py
+Flask aplikace se spouští ze souboru app/main.py
 
-### Database migration
+### Databázové migrace
 
-Generates migration file based on the model (app/model.py).
+Vytvoření nové migrace založené na změnách v aplikačním modelu (app/model.py).
 ```
 flask db migrate
 ```
-Performs migration in the db.
+Spuštění migrací.
 ```
 flask db update
 ```
 
-### Contributing
-#### Before pushing changes
-Before you push your changes, run code formatter Black by using the following command:
+### Přispívání
+#### Před odesláním změn
+Než odešlete vaše změny, zformátujte kód pomocí nástroje [Black](https://github.com/psf/black), následujícím příkazem:
 ```
 black {source_file_or_directory} 
 ```
-If the script doesn't work, run Black as package: 
+Pokud skript nefunguje, spusťe Black přímo jako balíček: 
 ```
 python3 -m black {source_file_or_directory}
 ```

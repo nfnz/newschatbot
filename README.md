@@ -74,7 +74,7 @@ Spuštění PostgreSQL pomocí Docker Compose: (Případně si můžete PostgreS
 cd dockers/postgres/
 docker-compose up
 ```
-**Databázové migrace**, 
+**Databázové migrace** 
 
 Nastavte v terminálu proměnnou prostředí FLASK_APP (na Linux prostředí místo _set_ použijte _export_)
 ```

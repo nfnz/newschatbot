@@ -32,9 +32,11 @@ Online nástroj Chatfuel nabízí několik verzí, my používali verzi za 15$/m
 Python Flask REST API poskytující data pro Chatfuels Chatbot. Nasazení probíhá pomocí [Serverless Frameworku](https://www.serverless.com/) na prostředí [AWS Lambda](https://aws.amazon.com/lambda/). Aplikace je připojena k Postgres databázi.
 
 ### Infrastruktura
-Infrastruktura pro backend a databázi je spravována pomocí [Terraformu](https://www.terraform.io/) (IaaC - Infrastructure-as-a-code). Nasazení probíhá automaticky pomocí [Github Actions](https://github.com/nfnz/newschatbot/actions). (Na Githubu je potřeba nastavit [proměnné](https://docs.github.com/en/actions/security-guides/encrypted-secrets) AWS_ACCESS_KEY_ID a AWS_SECRET_ACCESS_KEY.)
+Infrastruktura pro databázi je spravována pomocí [Terraformu](https://www.terraform.io/) (IaaC - Infrastructure-as-a-code). Nasazení probíhá automaticky pomocí [Github Actions](https://github.com/nfnz/newschatbot/actions). (Na Githubu je potřeba nastavit [proměnné](https://docs.github.com/en/actions/security-guides/encrypted-secrets) AWS_ACCESS_KEY_ID a AWS_SECRET_ACCESS_KEY.)
+  
+Základy Terraformu, Github Action and detailní popis celého workflow nasazování infrastruktury naleznete v [DevTalku](https://cesko.digital/cedu/devtalk-1-infrastruktura).
 
-AWS PostgreSQL databáze není přístupná přímo. Je přístupná pouze přes VPN. Pro získání přístupu kontaktujte @martinwenisch
+AWS PostgreSQL databáze není přístupná přímo, protože přístup do produkční databáze (připojení se přes `psql`) není běžně třeba. V případě řešení jakýchkoli neočekávaných problémů (například chybná migrace), doporučuji obnovit databázi ze zálohy (přes konzoli AWS) nebo si vytvořit dočasnou VPN a připojit se do interní sítě přes ní. Jako návod pro rychlé nastavení VPN na AWS doporučuju [článek od Vladimíra Smitky na Zdrojáku](https://zdrojak.cz/clanky/l2tp-vpn-v-aws-snadno-a-rychle/)
   
 ### Nasazení
 

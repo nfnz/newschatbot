@@ -4,7 +4,7 @@ aws-psycopg2==1.2.1
 click==8.0.0
 colorama==0.4.4
 feedparser==6.0.2
-Flask==1.0.2
+Flask==2.3.2
 Flask-Migrate==2.5.2
 flask-paginate==0.8.1
 Flask-SQLAlchemy==2.5.1
